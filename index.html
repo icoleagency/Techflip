@@ -1,72 +1,2650 @@
-TECHFLIP
-🛍 Storefront
-📊 My CRM
-🔍 IMEI Check
-💰 Buy Pricer
-📥 Sell To Us
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechFlip – Premium Devices</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #18181f;
+    --border: #2a2a35;
+    --accent: #00e5ff;
+    --accent2: #ff3c6e;
+    --green: #00d97e;
+    --yellow: #ffd23f;
+    --text: #f0f0f5;
+    --muted: #7a7a90;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  .app-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 60px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .app-logo {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+  .app-logo span { color: var(--accent2); }
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .nav-tab {
+    padding: 8px 20px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .nav-tab.active, .nav-tab:hover {
+    background: rgba(0,229,255,.1);
+    color: var(--accent);
+  }
+  .nav-tab.active { border: 1px solid rgba(0,229,255,.3); }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ════════════════════════════════
+     STOREFRONT
+  ════════════════════════════════ */
+  .hero {
+    padding: 80px 32px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,229,255,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 8vw, 96px);
+    line-height: 1;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 480px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+  .hero-cta {
+    display: inline-flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-primary:hover { opacity: .85; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    padding: 0 32px 32px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+  .filter-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,.07);
+  }
+
+  /* Grid */
+  .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 0 32px 60px;
+  }
+  .device-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all .25s;
+    position: relative;
+  }
+  .device-card:hover {
+    border-color: rgba(0,229,255,.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,229,255,.07);
+  }
+  .device-card.sold { opacity: .5; pointer-events: none; }
+  .card-badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .badge-available { background: rgba(0,217,126,.15); color: var(--green); border: 1px solid rgba(0,217,126,.3); }
+  .badge-sold { background: rgba(255,60,110,.1); color: var(--accent2); border: 1px solid rgba(255,60,110,.2); }
+  .card-emoji {
+    font-size: 52px;
+    text-align: center;
+    padding: 32px 0 16px;
+    display: block;
+  }
+  .card-body { padding: 0 20px 24px; }
+  .card-brand {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .card-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .card-spec {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .card-price {
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--accent);
+  }
+  .card-condition {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Contact strip */
+  .contact-strip {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 40px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .contact-strip h2 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    letter-spacing: 2px;
+  }
+  .contact-strip h2 span { color: var(--accent2); }
+  .contact-links { display: flex; gap: 12px; flex-wrap: wrap; }
+  .contact-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--card);
+    color: var(--text);
+    text-decoration: none;
+    transition: all .2s;
+  }
+  .contact-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ════════════════════════════════
+     CRM BACKEND
+  ════════════════════════════════ */
+  .crm-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    min-height: calc(100vh - 60px);
+  }
+  .crm-sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px;
+  }
+  .crm-sidebar h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    color: var(--accent);
+  }
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: border .2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-group select option { background: var(--card); }
+  .form-group textarea { resize: vertical; min-height: 70px; }
+
+  .btn-full { width: 100%; text-align: center; margin-top: 8px; padding: 13px; }
+
+  /* CRM Main */
+  .crm-main { padding: 28px; overflow-x: auto; }
+  .crm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .crm-header h2 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 2px;
+  }
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 24px;
+    min-width: 160px;
+    flex: 1;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 32px;
+    letter-spacing: 1px;
+  }
+  .stat-value.green { color: var(--green); }
+  .stat-value.cyan { color: var(--accent); }
+  .stat-value.pink { color: var(--accent2); }
+
+  /* Table */
+  .orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .orders-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .orders-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(42,42,53,.6);
+    vertical-align: middle;
+  }
+  .orders-table tr:hover td { background: rgba(255,255,255,.02); }
+  .platform-chip {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .chip-fb { background: rgba(24,119,242,.15); color: #5b9cf6; }
+  .chip-ou { background: rgba(255,90,31,.15); color: #ff7047; }
+  .chip-other { background: rgba(122,122,144,.15); color: var(--muted); }
+
+  .delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all .2s;
+  }
+  .delete-btn:hover { color: var(--accent2); background: rgba(255,60,110,.1); }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state .big { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 15px; }
+
+  /* Inventory manager in CRM */
+  .inv-manager {
+    margin-top: 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .inv-manager-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .inv-manager-header h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+  .inv-list { max-height: 300px; overflow-y: auto; }
+  .inv-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(42,42,53,.5);
+    font-size: 13.5px;
+  }
+  .inv-row:last-child { border-bottom: none; }
+  .inv-toggle {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid;
+    font-family: var(--font-body);
+    transition: all .2s;
+  }
+  .inv-toggle.avail { border-color: rgba(0,217,126,.4); color: var(--green); background: rgba(0,217,126,.08); }
+  .inv-toggle.sold-t { border-color: rgba(255,60,110,.4); color: var(--accent2); background: rgba(255,60,110,.08); }
+
+  /* toast */
+  /* ── SELL FORM ── */
+  .sell-step-ind {
+    flex: 1;
+    padding: 10px 8px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border);
+    transition: all .2s;
+  }
+  .sell-step-ind.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .sell-step-ind.done {
+    color: var(--green);
+    border-bottom-color: var(--green);
+  }
+  .sell-type-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .sell-type-btn.active, .sell-type-btn:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(255,60,110,.07);
+  }
+  .sell-cond-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--font-body);
+    cursor: pointer;
+    text-align: left;
+    transition: all .2s;
+    width: 100%;
+  }
+  .sell-cond-btn.active, .sell-cond-btn:hover {
+    border-color: var(--accent2);
+    background: rgba(255,60,110,.07);
+  }
+  .sell-box-btn {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .sell-box-btn.active, .sell-box-btn:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(255,60,110,.07);
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--green);
+    color: #000;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    z-index: 9999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all .3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  @media(max-width: 768px) {
+    .crm-layout { grid-template-columns: 1fr; }
+    .crm-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+    .inventory-grid { padding: 0 16px 40px; }
+    .filter-bar, .hero { padding-left: 16px; padding-right: 16px; }
+    .contact-strip { padding: 28px 16px; }
+    .crm-main { padding: 20px 12px; }
+    .app-nav { padding: 0 16px; }
+    .app-logo { font-size: 22px; }
+  }
+
+  /* ════════════════════════════════
+     HERO BANNER
+  ════════════════════════════════ */
+  .hero-banner {
+    margin: 0;
+    background: #08080f;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid #1a1a2e;
+  }
+  .hb-scanlines {
+    position: absolute; inset: 0; pointer-events: none; z-index: 4;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.12) 3px, rgba(0,0,0,0.12) 4px);
+  }
+  .hb-body {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    min-height: 440px;
+    position: relative;
+    z-index: 3;
+  }
+
+  /* LEFT */
+  .hb-left {
+    padding: 52px 44px 48px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+  .hb-corner {
+    position: absolute; width: 22px; height: 22px;
+    border-color: #2a2a55; border-style: solid; opacity: 0.5;
+  }
+  .hb-tl { top: 16px; left: 16px; border-width: 1.5px 0 0 1.5px; }
+  .hb-bl { bottom: 16px; left: 16px; border-width: 0 0 1.5px 1.5px; }
+  .hb-loc {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+  }
+  .hb-pin {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent2); flex-shrink: 0; display: inline-block;
+  }
+  .hb-loc span {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 2px; color: #5a5a7a;
+  }
+  .hb-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #0f1225; border: 1px solid #252545;
+    border-radius: 4px; padding: 5px 14px;
+    margin-bottom: 22px; width: fit-content;
+  }
+  .hb-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent); animation: hbpulse 1.5s infinite;
+    flex-shrink: 0; display: inline-block;
+  }
+  @keyframes hbpulse { 0%,100%{opacity:1} 50%{opacity:0.1} }
+  .hb-pill span {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 2.5px; color: var(--accent);
+  }
+  .hb-hed {
+    font-family: var(--font-display);
+    line-height: 0.92; margin-bottom: 20px;
+  }
+  .hb-l1 { font-size: clamp(56px,7vw,86px); color: #f0f0f5; letter-spacing: 3px; display: block; }
+  .hb-l2 { font-size: clamp(56px,7vw,86px); color: var(--accent); letter-spacing: 3px; display: block; }
+  .hb-l3 { font-size: clamp(30px,4vw,44px); color: #28284a; letter-spacing: 6px; display: block; margin-top: 4px; }
+  .hb-sub {
+    font-size: 14px; color: #58587a; line-height: 1.75;
+    max-width: 360px; margin-bottom: 14px;
+  }
+  .hb-sub strong { color: #9898be; font-weight: 500; }
+  .hb-types {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 26px;
+  }
+  .hb-type {
+    background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 20px; padding: 4px 12px;
+    font-family: var(--font-mono); font-size: 8px;
+    letter-spacing: 1.5px; color: var(--accent);
+  }
+  .hb-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hb-btn-c {
+    background: var(--accent); color: #000; border: none;
+    border-radius: 4px; padding: 13px 24px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 2px; cursor: pointer; font-weight: 700;
+    text-decoration: none; display: inline-block;
+    transition: opacity .2s, transform .15s;
+  }
+  .hb-btn-c:hover { opacity: .85; transform: translateY(-1px); }
+  .hb-btn-r {
+    background: var(--accent2); color: #fff; border: none;
+    border-radius: 4px; padding: 13px 24px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 2px; cursor: pointer; font-weight: 700;
+    transition: opacity .2s, transform .15s;
+  }
+  .hb-btn-r:hover { opacity: .85; transform: translateY(-1px); }
+  .hb-btn-o {
+    background: transparent; color: #c0c0d8;
+    border: 1px solid #252545; border-radius: 4px;
+    padding: 13px 24px; font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 2px; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: border-color .2s, color .2s;
+  }
+  .hb-btn-o:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* RIGHT */
+  .hb-right {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; padding: 16px 8px;
+  }
+  .hb-rbg { position: absolute; inset: 0; background: #09091c; }
+  .hb-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);
+    background-size: 32px 32px;
+  }
+  .hb-vig {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 55% 50%, transparent 15%, #09091c 82%);
+  }
+  .hb-orb  { position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(0,229,255,0.045);top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;pointer-events:none; }
+  .hb-orb2 { position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,60,110,0.035);bottom:10%;right:8%;z-index:1;pointer-events:none; }
+  .hb-orb3 { position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(0,217,126,0.03);top:12%;left:14%;z-index:1;pointer-events:none; }
+
+  /* BADGES */
+  .hb-bdg {
+    position: absolute; background: rgba(9,9,28,0.95);
+    border: 1px solid #222240; border-radius: 8px;
+    padding: 9px 13px; z-index: 10;
+  }
+  .hb-bdg-lbl { font-family:var(--font-mono);font-size:7px;letter-spacing:2px;color:#3a3a5a;margin-bottom:2px; }
+  .hb-bdg-val { font-family:var(--font-display);font-size:20px;letter-spacing:1px;line-height:1; }
+  .hb-bdg-tl { top:20px; left:16px; }
+  .hb-bdg-tr { top:20px; right:16px; }
+  .hb-bdg-bl { bottom:22px; left:16px; }
+  .hb-bdg-br { bottom:22px; right:16px; }
+
+  /* DEVICE STAGE */
+  .hb-stage {
+    position: relative; z-index: 5;
+    display: flex; align-items: flex-end; justify-content: center;
+    height: 360px; width: 100%;
+  }
+  .hb-dev { position: relative; flex-shrink: 0; }
+  .hb-dev img { width: 100%; display: block; transition: opacity .5s; }
+  .hb-devlabel {
+    position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 6.5px;
+    letter-spacing: 1.5px; color: #1e1e3a; white-space: nowrap;
+  }
+  .hb-mac-l {
+    width: 158px; z-index: 1;
+    transform: rotate(-10deg) translateY(42px) translateX(26px) perspective(600px) rotateY(16deg);
+  }
+  .hb-mac-l img { filter: drop-shadow(-8px 18px 36px rgba(0,0,0,0.85)) brightness(0.80); }
+  .hb-iph-bl {
+    width: 82px; z-index: 2;
+    transform: rotate(-9deg) translateY(22px) translateX(14px);
+  }
+  .hb-iph-bl img { filter: drop-shadow(-5px 14px 28px rgba(0,0,0,0.8)) brightness(0.84); }
+  .hb-iph-c {
+    width: 112px; z-index: 5;
+    transform: rotate(2deg) translateY(-18px);
+  }
+  .hb-iph-c img { filter: drop-shadow(0 24px 48px rgba(0,0,0,0.9)); }
+  .hb-sam-br {
+    width: 88px; z-index: 3;
+    transform: rotate(10deg) translateY(24px) translateX(-14px);
+  }
+  .hb-sam-br img { filter: drop-shadow(5px 14px 28px rgba(0,0,0,0.78)) brightness(0.82); }
+  .hb-mac-r {
+    width: 150px; z-index: 1;
+    transform: rotate(11deg) translateY(44px) translateX(-26px) perspective(600px) rotateY(-16deg);
+  }
+  .hb-mac-r img { filter: drop-shadow(8px 18px 36px rgba(0,0,0,0.82)) brightness(0.78); }
+
+  /* STRIP */
+  .hb-strip {
+    background: #0b0b18; border-top: 1px solid #181828;
+    padding: 10px 32px; display: flex; position: relative; z-index: 5;
+  }
+  .hb-si {
+    flex: 1; display: flex; align-items: center; gap: 7px;
+    padding: 0 10px; border-right: 1px solid #181828;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 1.5px; color: #3a3a5a;
+  }
+  .hb-si:first-child { padding-left: 0; }
+  .hb-si:last-child { border-right: none; }
+  .hb-sd { width:5px;height:5px;border-radius:50%;flex-shrink:0;display:inline-block; }
+
+  /* Mobile adjustments */
+  @media(max-width:768px) {
+    .hb-body { grid-template-columns: 1fr; }
+    .hb-right { min-height: 280px; }
+    .hb-stage { height: 240px; }
+    .hb-left { padding: 32px 20px 28px; }
+    .hb-mac-l, .hb-mac-r { width: 110px; }
+    .hb-iph-bl, .hb-sam-br { width: 60px; }
+    .hb-iph-c { width: 80px; }
+    .hb-bdg-tl, .hb-bdg-bl { display: none; }
+    .hb-strip { padding: 10px 16px; flex-wrap: wrap; gap: 4px; }
+    .hb-si { border-right: none; font-size: 8px; flex: 0 0 45%; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="app-nav">
+  <div class="app-logo">TECH<span>FLIP</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchView('storefront', this)">🛍 Storefront</button>
+    <button class="nav-tab" onclick="switchView('crm', this)">📊 My CRM</button>
+    <button class="nav-tab" onclick="switchView('imei', this)">🔍 IMEI Check</button>
+    <button class="nav-tab" onclick="switchView('pricer', this)">💰 Buy Pricer</button>
+    <button class="nav-tab" onclick="switchView('sell', this)">📥 Sell To Us</button>
+  </div>
+</nav>
+
+<!-- ═══════════ STOREFRONT VIEW ═══════════ -->
+<div id="view-storefront" class="view active">
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <div class="hb-scanlines"></div>
+
+    <div class="hb-body">
+      <!-- LEFT: Copy -->
+      <div class="hb-left">
+        <div class="hb-corner hb-tl"></div>
+        <div class="hb-corner hb-bl"></div>
+
+        <div class="hb-loc">
+          <span class="hb-pin"></span>
+          <span>MOUNT HOLLY, NJ &nbsp;·&nbsp; DM TO BUY &nbsp;·&nbsp; FAST RESPONSE</span>
+        </div>
+
+        <div class="hb-pill">
+          <span class="hb-dot"></span>
+          <span>IN STOCK NOW</span>
+        </div>
+
+        <div class="hb-hed">
+          <span class="hb-l1">PREMIUM</span>
+          <span class="hb-l2">DEVICES</span>
+          <span class="hb-l3">FOR LESS //</span>
+        </div>
+
+        <p class="hb-sub">
+          Certified pre-owned <strong>iPhones 14–17</strong>, Samsung Galaxy,
+          iPads &amp; MacBooks. Unlocked. Tested. Cash ready.
+        </p>
+
+        <div class="hb-types">
+          <span class="hb-type">iPHONE</span>
+          <span class="hb-type">SAMSUNG</span>
+          <span class="hb-type">MacBOOK</span>
+          <span class="hb-type">iPAD</span>
+        </div>
+
+        <div class="hb-ctas">
+          <a href="#inventory" class="hb-btn-c">BROWSE STOCK</a>
+          <button class="hb-btn-r" onclick="switchView('sell', document.querySelector('[onclick*=sell]'))">SELL YOUR DEVICE</button>
+          <a href="#contact" class="hb-btn-o">CONTACT</a>
+        </div>
+      </div>
+
+      <!-- RIGHT: Devices -->
+      <div class="hb-right">
+        <div class="hb-rbg"></div>
+        <div class="hb-grid"></div>
+        <div class="hb-vig"></div>
+        <div class="hb-orb"></div>
+        <div class="hb-orb2"></div>
+        <div class="hb-orb3"></div>
+
+        <div class="hb-bdg hb-bdg-tl">
+          <div class="hb-bdg-lbl">iPHONE 14–17</div>
+          <div class="hb-bdg-val" style="color:#00e5ff;">FROM $429</div>
+        </div>
+        <div class="hb-bdg hb-bdg-tr">
+          <div class="hb-bdg-lbl">MacBOOK</div>
+          <div class="hb-bdg-val" style="color:#a78bfa;">FROM $449</div>
+        </div>
+        <div class="hb-bdg hb-bdg-bl">
+          <div class="hb-bdg-lbl">SAMSUNG</div>
+          <div class="hb-bdg-val" style="color:#00d97e;">FROM $259</div>
+        </div>
+        <div class="hb-bdg hb-bdg-br">
+          <div class="hb-bdg-lbl">AVG SELL TIME</div>
+          <div class="hb-bdg-val" style="color:#ffd23f;">3–7 DAYS</div>
+        </div>
+
+        <div class="hb-stage">
+          <div class="hb-dev hb-mac-l">
+            <img src="https://www.apple.com/v/macbook-air/s/images/overview/design/macbook_air_design_closed__erl1ukzwdxme_large.jpg" alt="MacBook Air" onerror="this.style.display='none'">
+            <div class="hb-devlabel">MacBOOK AIR M4</div>
+          </div>
+          <div class="hb-dev hb-iph-bl">
+            <img src="https://www.apple.com/v/iphone-16/b/images/overview/consider/iphone_16_consider__e3j7qqp59v42_large.jpg" alt="iPhone 16" onerror="this.style.display='none'">
+            <div class="hb-devlabel">iPHONE 16</div>
+          </div>
+          <div class="hb-dev hb-iph-c">
+            <img src="https://www.apple.com/v/iphone-16-pro/c/images/overview/welcome/iphone_16_pro_welcome__d6a82t5n6s2e_large.jpg" alt="iPhone 16 Pro" onerror="this.style.display='none'">
+            <div class="hb-devlabel">iPHONE 16 PRO</div>
+          </div>
+          <div class="hb-dev hb-sam-br">
+            <img src="https://images.samsung.com/is/image/samsung/p6pim/uk/2501/gallery/uk-galaxy-s25-sm-s931-sm-s931blbgbtu-thumbs-545272787?$480_480_PNG$" alt="Samsung Galaxy S25" onerror="this.style.display='none'">
+            <div class="hb-devlabel">GALAXY S25</div>
+          </div>
+          <div class="hb-dev hb-mac-r">
+            <img src="https://www.apple.com/v/macbook-pro/ap/images/overview/design/macbook_pro_design__eqjk1f7jvjiq_large.jpg" alt="MacBook Pro" onerror="this.style.display='none'">
+            <div class="hb-devlabel">MacBOOK PRO M4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hb-strip">
+      <div class="hb-si"><span class="hb-sd" style="background:#00e5ff;"></span>UNLOCKED</div>
+      <div class="hb-si"><span class="hb-sd" style="background:#00d97e;"></span>FULLY TESTED</div>
+      <div class="hb-si"><span class="hb-sd" style="background:#ffd23f;"></span>IMEI VERIFIED</div>
+      <div class="hb-si"><span class="hb-sd" style="background:#ff3c6e;"></span>BEST PRICE</div>
+      <div class="hb-si"><span class="hb-sd" style="background:#a78bfa;"></span>NJ LOCAL · CASH READY</div>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar" id="inventory">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-filter="all" onclick="filterInventory('all', this)">All</button>
+    <button class="filter-btn" data-filter="iphone" onclick="filterInventory('iphone', this)">iPhone</button>
+    <button class="filter-btn" data-filter="ipad" onclick="filterInventory('ipad', this)">iPad</button>
+    <button class="filter-btn" data-filter="samsung" onclick="filterInventory('samsung', this)">Samsung</button>
+    <button class="filter-btn" data-filter="macbook" onclick="filterInventory('macbook', this)">MacBook</button>
+    <button class="filter-btn" data-filter="available" onclick="filterInventory('available', this)">✅ Available Only</button>
+  </div>
+
+  <!-- Inventory Grid -->
+  <div class="inventory-grid" id="inventory-grid"></div>
+
+  <!-- Contact Strip -->
+  <div class="contact-strip" id="contact">
+    <div>
+      <h2>INTERESTED? <span>LET'S DEAL.</span></h2>
+      <p style="color:var(--muted);margin-top:8px;font-size:15px;">DM me on Facebook Marketplace or OfferUp. Fast replies, fair prices.</p>
+    </div>
+    <div class="contact-links">
+      <a class="contact-chip" href="#">
+        <span>👤</span> Facebook Marketplace
+      </a>
+      <a class="contact-chip" href="#">
+        <span>🛒</span> OfferUp
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════ CRM VIEW ═══════════ -->
+<div id="view-crm" class="view">
+  <div class="crm-layout">
+
+    <!-- Sidebar: Log a Sale -->
+    <div class="crm-sidebar">
+      <h2>LOG A SALE</h2>
+      <div class="form-group">
+        <label>Item Sold</label>
+        <select id="crm-item">
+          <option value="">— Select Device —</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Custom Item (if not listed)</label>
+        <input type="text" id="crm-custom" placeholder="e.g. iPhone 12 Pro 256GB Blue">
+      </div>
+      <div class="form-group">
+        <label>Sale Price ($)</label>
+        <input type="number" id="crm-price" placeholder="250" min="0">
+      </div>
+      <div class="form-group">
+        <label>Date Sold</label>
+        <input type="date" id="crm-date">
+      </div>
+      <div class="form-group">
+        <label>Platform</label>
+        <select id="crm-platform">
+          <option value="Facebook Marketplace">Facebook Marketplace</option>
+          <option value="OfferUp">OfferUp</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Buyer Name (optional)</label>
+        <input type="text" id="crm-buyer" placeholder="John D.">
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="crm-notes" placeholder="e.g. Paid cash, good condition..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="logSale()">+ Log Sale</button>
+
+      <!-- LOG A PURCHASE -->
+      <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);">
+        <h2 style="color:var(--green);">LOG A PURCHASE</h2>
+        <div class="form-group">
+          <label>Device Bought</label>
+          <input type="text" id="pur-item" placeholder="iPhone 15 Pro 256GB Black">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="pur-cat">
+            <option value="iphone">iPhone</option>
+            <option value="samsung">Samsung</option>
+            <option value="ipad">iPad</option>
+            <option value="macbook">MacBook</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Storage / Spec</label>
+          <input type="text" id="pur-spec" placeholder="256GB · Unlocked">
+        </div>
+        <div class="form-group">
+          <label>Condition</label>
+          <select id="pur-condition">
+            <option>Like New</option>
+            <option>Excellent</option>
+            <option>Good</option>
+            <option>Fair</option>
+            <option>For Parts</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Purchase Price ($)</label>
+          <input type="number" id="pur-price" placeholder="400" min="0">
+        </div>
+        <div class="form-group">
+          <label>Target Sell Price ($)</label>
+          <input type="number" id="pur-target" placeholder="550" min="0">
+        </div>
+        <div class="form-group">
+          <label>Date Purchased</label>
+          <input type="date" id="pur-date">
+        </div>
+        <div class="form-group">
+          <label>Source / Seller</label>
+          <select id="pur-source">
+            <option value="Facebook Marketplace">Facebook Marketplace</option>
+            <option value="OfferUp">OfferUp</option>
+            <option value="Walk-in">Walk-in</option>
+            <option value="Craigslist">Craigslist</option>
+            <option value="Bulk Lot">Bulk Lot</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Seller Name (optional)</label>
+          <input type="text" id="pur-seller" placeholder="Jane D.">
+        </div>
+        <div class="form-group">
+          <label>IMEI / Serial (optional)</label>
+          <input type="text" id="pur-imei" placeholder="IMEI or serial number">
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="pur-notes" placeholder="e.g. Battery health 87%, minor crack on back..."></textarea>
+        </div>
+        <button class="btn btn-full" style="background:var(--green);color:#000;font-weight:700;" onclick="logPurchase()">+ Log Purchase</button>
+      </div>
+
+      <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);">
+        <h2>ADD TO INVENTORY</h2>
+        <div class="form-group">
+          <label>Device Name</label>
+          <input type="text" id="inv-name" placeholder="iPhone 11 64GB Black">
+        </div>
+        <div class="form-group">
+          <label>Price ($)</label>
+          <input type="number" id="inv-price" placeholder="199">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="inv-cat">
+            <option value="iphone">iPhone</option>
+            <option value="ipad">iPad</option>
+            <option value="samsung">Samsung</option>
+            <option value="macbook">MacBook</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Condition</label>
+          <select id="inv-condition">
+            <option>Like New</option>
+            <option>Excellent</option>
+            <option>Good</option>
+            <option>Fair</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Storage / Spec</label>
+          <input type="text" id="inv-spec" placeholder="64GB · Unlocked">
+        </div>
+        <button class="btn btn-outline btn-full" onclick="addInventoryItem()">+ Add to Storefront</button>
+      </div>
+    </div>
+
+    <!-- Main: Dashboard -->
+    <div class="crm-main">
+      <div class="crm-header">
+        <div>
+          <h2>SALES DASHBOARD</h2>
+          <div id="sync-status" style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;margin-top:4px;color:var(--muted);">Connecting to Google Sheets...</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="gsLoadSales()" style="font-size:12px;padding:8px 14px;">🔄 Sync Sheet</button>
+          <button class="btn btn-outline" onclick="exportCSV()" style="font-size:12px;padding:8px 14px;">📋 Export</button>
+        </div>
+      </div>
+
+      <div class="stats-row" id="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Sales</div>
+          <div class="stat-value cyan" id="stat-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Revenue</div>
+          <div class="stat-value green" id="stat-revenue">$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Spent</div>
+          <div class="stat-value pink" id="stat-spent">$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Net Profit</div>
+          <div class="stat-value" id="stat-profit" style="color:var(--green)">$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">In Stock</div>
+          <div class="stat-value" id="stat-stock" style="color:var(--yellow)">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Purchased</div>
+          <div class="stat-value" id="stat-purchased" style="color:var(--muted)">0</div>
+        </div>
+      </div>
+
+      <!-- Sales Table -->
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <table class="orders-table" id="orders-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Item</th>
+              <th>Price</th>
+              <th>Date</th>
+              <th>Platform</th>
+              <th>Buyer</th>
+              <th>Notes</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="orders-body">
+          </tbody>
+        </table>
+        <div class="empty-state" id="empty-state">
+          <div class="big">📦</div>
+          <p>No sales logged yet. Log your first sale →</p>
+        </div>
+      </div>
+
+      <!-- Inventory Manager -->
+      <div class="inv-manager">
+        <div class="inv-manager-header">
+          <h3>INVENTORY MANAGER</h3>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">Toggle availability on storefront</span>
+        </div>
+        <div class="inv-list" id="inv-manager-list"></div>
+      </div>
+
+      <!-- Purchase Log -->
+      <div class="inv-manager" style="margin-top:24px;">
+        <div class="inv-manager-header">
+          <h3 style="color:var(--green);">PURCHASE LOG</h3>
+          <div style="display:flex;gap:8px;">
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">Devices you bought to flip</span>
+            <button class="btn btn-outline" onclick="exportPurchasesCSV()" style="font-size:11px;padding:4px 12px;">📋 Export</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="orders-table" id="purchases-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Device</th>
+                <th>Spec</th>
+                <th>Condition</th>
+                <th>Bought For</th>
+                <th>Target Price</th>
+                <th>Potential Profit</th>
+                <th>Date</th>
+                <th>Source</th>
+                <th>Seller</th>
+                <th>IMEI</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="purchases-body"></tbody>
+          </table>
+          <div class="empty-state" id="purchases-empty">
+            <div class="big">🛒</div>
+            <p>No purchases logged yet. Log your first buy →</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 
 
+<!-- ═══════════ SELL VIEW ═══════════ -->
+<div id="view-sell" class="view">
+  <div style="max-width:760px;margin:0 auto;padding:40px 32px;">
 
-MOUNT HOLLY, NJ  ·  DM TO BUY  ·  FAST RESPONSE
+    <div style="margin-bottom:36px;">
+      <div class="hero-eyebrow" style="text-align:left;margin-bottom:8px;">WE BUY DEVICES</div>
+      <h2 style="font-family:var(--font-display);font-size:42px;letter-spacing:2px;margin-bottom:8px;">SELL YOUR <span style="color:var(--accent2);">DEVICE</span></h2>
+      <p style="color:var(--muted);font-size:15px;line-height:1.7;max-width:520px;">Get a fast offer on your phone, tablet, or laptop. Fill out the form below and we'll reach out with a fair cash price — usually within a few hours.</p>
+    </div>
 
-IN STOCK NOW
-PREMIUM
-DEVICES
-FOR LESS //
-Certified pre-owned iPhones 14–17, Samsung Galaxy, iPads & MacBooks. Unlocked. Tested. Cash ready.
-iPHONE
-SAMSUNG
-MacBOOK
-iPAD
-BROWSE STOCK
-SELL YOUR DEVICE
-CONTACT
+    <!-- Progress indicator -->
+    <div style="display:flex;gap:0;margin-bottom:32px;" id="sell-progress">
+      <div class="sell-step-ind active" id="step-ind-1">1 · Device Info</div>
+      <div class="sell-step-ind" id="step-ind-2">2 · Condition</div>
+      <div class="sell-step-ind" id="step-ind-3">3 · Your Info</div>
+    </div>
+
+    <!-- STEP 1: Device Info -->
+    <div id="sell-step-1" class="sell-step">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;">
+        <div style="font-family:var(--font-display);font-size:20px;letter-spacing:1px;margin-bottom:20px;color:var(--accent);">WHAT ARE YOU SELLING?</div>
+
+        <div class="form-group">
+          <label>Device Type</label>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:6px;" id="sell-type-grid">
+            <button class="sell-type-btn active" data-type="iPhone" onclick="selectSellType(this)">📱 iPhone</button>
+            <button class="sell-type-btn" data-type="Samsung" onclick="selectSellType(this)">📲 Samsung</button>
+            <button class="sell-type-btn" data-type="iPad" onclick="selectSellType(this)">🖥 iPad</button>
+            <button class="sell-type-btn" data-type="MacBook" onclick="selectSellType(this)">💻 MacBook</button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px;">
+          <label>Model</label>
+          <select id="sell-model"></select>
+        </div>
+
+        <div class="form-group" id="sell-storage-group">
+          <label>Storage</label>
+          <select id="sell-storage">
+            <option value="64GB">64GB</option>
+            <option value="128GB" selected>128GB</option>
+            <option value="256GB">256GB</option>
+            <option value="512GB">512GB</option>
+            <option value="1TB">1TB</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="sell-carrier-group">
+          <label>Carrier / Lock Status</label>
+          <select id="sell-carrier">
+            <option value="Unlocked">Unlocked</option>
+            <option value="AT&T">AT&T</option>
+            <option value="T-Mobile">T-Mobile</option>
+            <option value="Verizon">Verizon</option>
+            <option value="Cricket">Cricket</option>
+            <option value="Metro PCS">Metro PCS</option>
+            <option value="Other Carrier">Other Carrier</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:8px;width:100%;padding:14px;" onclick="sellStep(2)">Next — Condition →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Condition -->
+    <div id="sell-step-2" class="sell-step" style="display:none;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;">
+        <div style="font-family:var(--font-display);font-size:20px;letter-spacing:1px;margin-bottom:20px;color:var(--accent);">WHAT CONDITION IS IT IN?</div>
+
+        <div class="form-group">
+          <label>Condition</label>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
+            <button class="sell-cond-btn active" data-cond="Like New" onclick="selectSellCond(this)">
+              <span style="font-size:20px;">✨</span>
+              <div>
+                <div style="font-weight:600;font-size:14px;">Like New</div>
+                <div style="font-size:12px;color:var(--muted);">No scratches, no dents, works perfectly</div>
+              </div>
+            </button>
+            <button class="sell-cond-btn" data-cond="Excellent" onclick="selectSellCond(this)">
+              <span style="font-size:20px;">👍</span>
+              <div>
+                <div style="font-weight:600;font-size:14px;">Excellent</div>
+                <div style="font-size:12px;color:var(--muted);">Light hairline scratches, fully functional</div>
+              </div>
+            </button>
+            <button class="sell-cond-btn" data-cond="Good" onclick="selectSellCond(this)">
+              <span style="font-size:20px;">✅</span>
+              <div>
+                <div style="font-weight:600;font-size:14px;">Good</div>
+                <div style="font-size:12px;color:var(--muted);">Visible scratches or minor scuffs, works fine</div>
+              </div>
+            </button>
+            <button class="sell-cond-btn" data-cond="Fair" onclick="selectSellCond(this)">
+              <span style="font-size:20px;">⚠️</span>
+              <div>
+                <div style="font-weight:600;font-size:14px;">Fair</div>
+                <div style="font-size:12px;color:var(--muted);">Cracked screen or heavy wear, still powers on</div>
+              </div>
+            </button>
+            <button class="sell-cond-btn" data-cond="For Parts" onclick="selectSellCond(this)">
+              <span style="font-size:20px;">🔧</span>
+              <div>
+                <div style="font-weight:600;font-size:14px;">For Parts / Not Working</div>
+                <div style="font-size:12px;color:var(--muted);">Doesn't power on or has major damage</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px;">
+          <label>Original Box Included?</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
+            <button class="sell-box-btn active" data-box="Yes" onclick="selectSellBox(this)">📦 Yes, I have the box</button>
+            <button class="sell-box-btn" data-box="No" onclick="selectSellBox(this)">🚫 No box</button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:20px;">
+          <label>Any Additional Details? (optional)</label>
+          <textarea id="sell-details" placeholder="e.g. battery health 89%, small crack on back, comes with charger..." style="min-height:80px;"></textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:8px;">
+          <button class="btn btn-outline" style="flex:1;padding:12px;" onclick="sellStep(1)">← Back</button>
+          <button class="btn btn-primary" style="flex:2;padding:12px;" onclick="sellStep(3)">Next — Your Info →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Contact Info -->
+    <div id="sell-step-3" class="sell-step" style="display:none;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;">
+        <div style="font-family:var(--font-display);font-size:20px;letter-spacing:1px;margin-bottom:20px;color:var(--accent);">HOW CAN WE REACH YOU?</div>
+
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="sell-name" placeholder="John Smith">
+        </div>
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="sell-phone" placeholder="(609) 555-0123">
+        </div>
+        <div class="form-group">
+          <label>City / Location *</label>
+          <input type="text" id="sell-location" placeholder="e.g. Mount Holly, NJ">
+        </div>
+        <div class="form-group">
+          <label>Preferred Contact Method</label>
+          <select id="sell-contact-pref">
+            <option value="Text">Text Message</option>
+            <option value="Call">Phone Call</option>
+            <option value="Facebook">Facebook Messenger</option>
+            <option value="OfferUp">OfferUp Message</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Asking Price (optional)</label>
+          <input type="number" id="sell-asking" placeholder="Leave blank if unsure — we'll make an offer">
+        </div>
+
+        <!-- Summary preview -->
+        <div id="sell-summary" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin:20px 0;font-size:13px;line-height:1.9;"></div>
+
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline" style="flex:1;padding:12px;" onclick="sellStep(2)">← Back</button>
+          <button class="btn" id="sell-submit-btn" style="flex:2;padding:12px;background:var(--accent2);color:#fff;font-size:15px;font-weight:600;" onclick="submitSellForm()">📤 Submit My Device</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div id="sell-success" style="display:none;text-align:center;padding:60px 20px;">
+      <div style="font-size:64px;margin-bottom:20px;">🎉</div>
+      <div style="font-family:var(--font-display);font-size:36px;letter-spacing:2px;margin-bottom:12px;">REQUEST <span style="color:var(--green);">RECEIVED!</span></div>
+      <p style="color:var(--muted);font-size:15px;line-height:1.7;max-width:440px;margin:0 auto 28px;">We'll review your device details and reach out with a cash offer within a few hours. Thanks for choosing TechFlip!</p>
+      <button class="btn btn-outline" onclick="resetSellForm()" style="padding:12px 28px;">Submit Another Device</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════ IMEI VIEW ═══════════ -->
+<div id="view-imei" class="view">
+  <div style="max-width:680px;margin:0 auto;padding:40px 32px;">
+
+    <div style="margin-bottom:32px;">
+      <div class="hero-eyebrow" style="text-align:left;margin-bottom:8px;">DEVICE VERIFICATION</div>
+      <h2 style="font-family:var(--font-display);font-size:36px;letter-spacing:2px;margin-bottom:8px;">IMEI <span style="color:var(--accent)">CHECKER</span></h2>
+      <p style="color:var(--muted);font-size:14px;line-height:1.7;">Enter a device IMEI or serial number to check for blacklist status, activation lock, and authenticity signals. Always check before you buy.</p>
+    </div>
+
+    <!-- Input -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;">
+      <div class="form-group" style="margin-bottom:16px;">
+        <label>IMEI / Serial Number</label>
+        <div style="display:flex;gap:10px;">
+          <input type="text" id="imei-input" placeholder="Enter 15-digit IMEI or serial number" maxlength="20"
+            style="flex:1;font-family:var(--font-mono);letter-spacing:1px;"
+            oninput="this.value=this.value.replace(/[^0-9a-zA-Z]/g,'').toUpperCase()"
+            onkeydown="if(event.key==='Enter')runImeiCheck()">
+          <button class="btn btn-primary" onclick="runImeiCheck()" style="white-space:nowrap;min-width:120px;" id="imei-btn">Check IMEI</button>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);">📞 To find IMEI: dial <strong style="color:var(--text);">*#06#</strong> on the device, or check Settings → General → About (iPhone) or Settings → About (Samsung).</p>
+    </div>
+
+    <!-- Result panel -->
+    <div id="imei-result" style="display:none;"></div>
+
+    <!-- Info cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--accent);margin-bottom:8px;">WHAT IS BLACKLISTED?</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">A blacklisted phone has been reported stolen, lost, or has unpaid bills. Carriers block it from their network. Never buy a blacklisted device — you can't resell it.</p>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--yellow);margin-bottom:8px;">ACTIVATION LOCK WARNING</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">iCloud or Google account lock means the previous owner's account is still linked. The buyer can't set it up. Always ask for a lock-free device before purchasing.</p>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--green);margin-bottom:8px;">IMEI VALIDITY CHECK</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">A real IMEI is 15 digits and passes the Luhn algorithm checksum. A fake or cloned device will often fail this check — a red flag for counterfeit hardware.</p>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--accent2);margin-bottom:8px;">FREE LOOKUP SITES</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">For a full carrier blacklist check use: <a href="https://www.imei.info" target="_blank" style="color:var(--accent);">imei.info</a>, <a href="https://swappa.com/esn" target="_blank" style="color:var(--accent);">swappa.com/esn</a>, or your carrier's IMEI checker. Some checks cost $1–5.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════ BUY PRICER VIEW ═══════════ -->
+<div id="view-pricer" class="view">
+  <div style="max-width:760px;margin:0 auto;padding:40px 32px;">
+
+    <div style="margin-bottom:32px;">
+      <div class="hero-eyebrow" style="text-align:left;margin-bottom:8px;">RESELLER TOOL</div>
+      <h2 style="font-family:var(--font-display);font-size:36px;letter-spacing:2px;margin-bottom:8px;">BUY PRICE <span style="color:var(--accent)">CALCULATOR</span></h2>
+      <p style="color:var(--muted);font-size:14px;line-height:1.7;">Enter what device you're looking at and we'll tell you the max you should pay to still make a healthy profit when reselling.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+
+      <!-- Left: Inputs -->
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;">
+        <div class="form-group">
+          <label>Device Type</label>
+          <select id="pr-type" onchange="updatePricerModels()">
+            <option value="iphone">iPhone</option>
+            <option value="samsung">Samsung Galaxy</option>
+            <option value="ipad">iPad</option>
+            <option value="macbook">MacBook</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Model</label>
+          <select id="pr-model"></select>
+        </div>
+        <div class="form-group">
+          <label>Storage</label>
+          <select id="pr-storage">
+            <option value="64">64GB</option>
+            <option value="128" selected>128GB</option>
+            <option value="256">256GB</option>
+            <option value="512">512GB</option>
+            <option value="1000">1TB</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Condition</label>
+          <select id="pr-condition">
+            <option value="sealed">🆕 New Sealed</option>
+            <option value="openbox">📦 Open Box</option>
+            <option value="likenew">✨ Like New (no scratches)</option>
+            <option value="excellent">👍 Excellent (minor wear)</option>
+            <option value="good">✅ Good (visible wear)</option>
+            <option value="fair">⚠️ Fair (cracks/issues)</option>
+            <option value="parts">🔧 For Parts / Not Working</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Carrier</label>
+          <select id="pr-carrier">
+            <option value="unlocked">Unlocked</option>
+            <option value="locked">Carrier Locked</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Includes Original Box?</label>
+          <select id="pr-box">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Target Profit Margin</label>
+          <select id="pr-margin">
+            <option value="20">20% (low)</option>
+            <option value="30" selected>30% (standard)</option>
+            <option value="40">40% (good)</option>
+            <option value="50">50% (high)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="calcPrice()">Calculate Buy Price</button>
+      </div>
+
+      <!-- Right: Result -->
+      <div id="pricer-result" style="display:none;"></div>
+      <div id="pricer-placeholder" style="background:var(--card);border:1px dashed var(--border);border-radius:12px;padding:40px 24px;text-align:center;">
+        <div style="font-size:48px;margin-bottom:16px;">💰</div>
+        <p style="color:var(--muted);font-size:14px;line-height:1.7;">Fill in the device details on the left and click <strong style="color:var(--text);">Calculate Buy Price</strong> to see how much you should pay and what you can sell it for.</p>
+      </div>
+
+    </div>
+
+    <!-- Tips -->
+    <div style="margin-top:28px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--yellow);margin-bottom:12px;">💡 RESELLER PRO TIPS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;color:var(--muted);line-height:1.7;">
+        <div>• Always negotiate — most sellers expect it. Offer 10–15% below your max buy price first.</div>
+        <div>• Carrier locked phones sell for 15–20% less. Only buy if price reflects that.</div>
+        <div>• "For parts" phones are goldmines if you know what you're doing — screens, batteries, housings.</div>
+        <div>• New sealed boxes command a premium — verify seal authenticity before paying top dollar.</div>
+        <div>• Factor in your time: if it takes 2 weeks to sell, that cuts your effective margin.</div>
+        <div>• Check eBay "Sold listings" to verify current real-world resale value before buying.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════
+//  DATA STORE
+// ════════════════════════════════
+const EMOJIS = { iphone:'📱', ipad:'🖥', samsung:'📲', macbook:'💻' };
+
+const DEFAULT_INVENTORY = [
+  { id:1,  name:'iPhone 14 128GB', category:'iphone', price:429, condition:'Good', spec:'128GB · Unlocked', available:true },
+  { id:2,  name:'iPhone 14 Plus 128GB', category:'iphone', price:479, condition:'Excellent', spec:'128GB · Unlocked', available:true },
+  { id:3,  name:'iPhone 14 Pro 256GB', category:'iphone', price:549, condition:'Like New', spec:'256GB · Unlocked', available:true },
+  { id:4,  name:'iPhone 14 Pro Max 256GB', category:'iphone', price:599, condition:'Excellent', spec:'256GB · Unlocked', available:false },
+  { id:5,  name:'iPhone 15 128GB', category:'iphone', price:529, condition:'Like New', spec:'128GB · Unlocked', available:true },
+  { id:6,  name:'iPhone 15 Plus 256GB', category:'iphone', price:579, condition:'Excellent', spec:'256GB · Unlocked', available:true },
+  { id:7,  name:'iPhone 15 Pro 256GB', category:'iphone', price:649, condition:'Like New', spec:'256GB · Unlocked', available:true },
+  { id:8,  name:'iPhone 15 Pro Max 512GB', category:'iphone', price:749, condition:'Excellent', spec:'512GB · Unlocked', available:false },
+  { id:9,  name:'iPhone 16 128GB', category:'iphone', price:629, condition:'Like New', spec:'128GB · Unlocked', available:true },
+  { id:10, name:'iPhone 16 Plus 256GB', category:'iphone', price:679, condition:'Excellent', spec:'256GB · Unlocked', available:true },
+  { id:11, name:'iPhone 16 Pro 256GB', category:'iphone', price:749, condition:'Like New', spec:'256GB · Unlocked', available:true },
+  { id:12, name:'iPhone 16 Pro Max 512GB', category:'iphone', price:849, condition:'Like New', spec:'512GB · Unlocked', available:true },
+  { id:13, name:'iPhone 17 128GB', category:'iphone', price:729, condition:'Like New', spec:'128GB · Unlocked', available:true },
+  { id:14, name:'iPhone 17 Pro 256GB', category:'iphone', price:849, condition:'Like New', spec:'256GB · Unlocked', available:true },
+  { id:15, name:'iPhone 17 Pro Max 512GB', category:'iphone', price:949, condition:'Like New', spec:'512GB · Unlocked', available:false },
+  { id:16, name:'iPad 7th Gen 32GB (2019)', category:'ipad', price:149, condition:'Good', spec:'32GB · WiFi', available:true },
+  { id:17, name:'iPad Mini 5th Gen 64GB (2019)', category:'ipad', price:179, condition:'Good', spec:'64GB · WiFi', available:true },
+  { id:34, name:'iPad Pro 11" 128GB (2020)', category:'ipad', price:349, condition:'Excellent', spec:'128GB · WiFi', available:true },
+  { id:35, name:'iPad Pro 12.9" 256GB (2020)', category:'ipad', price:449, condition:'Excellent', spec:'256GB · WiFi', available:false },
+  { id:36, name:'iPad 8th Gen 32GB (2020)', category:'ipad', price:169, condition:'Good', spec:'32GB · WiFi', available:true },
+  { id:37, name:'iPad Pro 11" M1 128GB (2021)', category:'ipad', price:429, condition:'Like New', spec:'128GB · WiFi', available:true },
+  { id:38, name:'iPad Pro 12.9" M1 256GB (2021)', category:'ipad', price:549, condition:'Like New', spec:'256GB · WiFi', available:true },
+  { id:39, name:'iPad Mini 6th Gen 64GB (2021)', category:'ipad', price:299, condition:'Like New', spec:'64GB · WiFi', available:true },
+  { id:40, name:'iPad 9th Gen 64GB (2021)', category:'ipad', price:189, condition:'Good', spec:'64GB · WiFi', available:false },
+  { id:41, name:'iPad Air 5th Gen 64GB (2022)', category:'ipad', price:349, condition:'Like New', spec:'64GB · WiFi · M1', available:true },
+  { id:42, name:'iPad 10th Gen 64GB (2022)', category:'ipad', price:249, condition:'Like New', spec:'64GB · WiFi', available:true },
+  { id:43, name:'iPad Pro 11" M2 128GB (2022)', category:'ipad', price:499, condition:'Like New', spec:'128GB · WiFi', available:true },
+  { id:44, name:'iPad Pro 12.9" M2 256GB (2022)', category:'ipad', price:649, condition:'Excellent', spec:'256GB · WiFi', available:false },
+  { id:45, name:'iPad Pro 11" M4 256GB (2024)', category:'ipad', price:699, condition:'Like New', spec:'256GB · WiFi', available:true },
+  { id:46, name:'iPad Pro 13" M4 256GB (2024)', category:'ipad', price:849, condition:'Like New', spec:'256GB · WiFi', available:true },
+  { id:47, name:'iPad Air 11" M2 128GB (2024)', category:'ipad', price:449, condition:'Like New', spec:'128GB · WiFi', available:true },
+  { id:48, name:'iPad Air 13" M2 128GB (2024)', category:'ipad', price:549, condition:'Like New', spec:'128GB · WiFi', available:false },
+  { id:49, name:'iPad Mini 7th Gen 128GB (2024)', category:'ipad', price:349, condition:'Like New', spec:'128GB · WiFi · A17 Pro', available:true },
+  { id:18, name:'Samsung Galaxy S21 128GB', category:'samsung', price:259, condition:'Good', spec:'128GB · Unlocked', available:true },
+  { id:19, name:'Samsung Galaxy S21+ 128GB', category:'samsung', price:299, condition:'Excellent', spec:'128GB · Unlocked', available:true },
+  { id:20, name:'Samsung Galaxy S21 Ultra 256GB', category:'samsung', price:369, condition:'Good', spec:'256GB · Unlocked', available:true },
+  { id:22, name:'Samsung Galaxy S22 128GB', category:'samsung', price:329, condition:'Like New', spec:'128GB · Unlocked', available:true },
+  { id:23, name:'Samsung Galaxy S22+ 256GB', category:'samsung', price:399, condition:'Excellent', spec:'256GB · Unlocked', available:false },
+  { id:24, name:'Samsung Galaxy S22 Ultra 256GB', category:'samsung', price:489, condition:'Excellent', spec:'256GB · Unlocked', available:true },
+  { id:25, name:'Samsung Galaxy S23 128GB', category:'samsung', price:429, condition:'Like New', spec:'128GB · Unlocked', available:true },
+  { id:26, name:'Samsung Galaxy S23+ 256GB', category:'samsung', price:499, condition:'Like New', spec:'256GB · Unlocked', available:true },
+  { id:27, name:'Samsung Galaxy S23 Ultra 256GB', category:'samsung', price:579, condition:'Like New', spec:'256GB · Unlocked', available:false },
+  { id:28, name:'Samsung Galaxy S24 128GB', category:'samsung', price:529, condition:'Like New', spec:'128GB · Unlocked', available:true },
+  { id:29, name:'Samsung Galaxy S24+ 256GB', category:'samsung', price:599, condition:'Like New', spec:'256GB · Unlocked', available:true },
+  { id:30, name:'Samsung Galaxy S24 Ultra 512GB', category:'samsung', price:749, condition:'Like New', spec:'512GB · Unlocked', available:true },
+  { id:31, name:'Samsung Galaxy S25 128GB', category:'samsung', price:649, condition:'Like New', spec:'128GB · Unlocked', available:true },
+  { id:32, name:'Samsung Galaxy S25+ 256GB', category:'samsung', price:729, condition:'Like New', spec:'256GB · Unlocked', available:true },
+  { id:33, name:'Samsung Galaxy S25 Ultra 512GB', category:'samsung', price:899, condition:'Like New', spec:'512GB · Unlocked', available:false },
+  { id:20, name:'MacBook Air 13" 2019', category:'macbook', price:449, condition:'Good', spec:'8GB RAM · 256GB SSD · Intel', available:true },
+  { id:21, name:'MacBook Pro 13" 2019', category:'macbook', price:499, condition:'Good', spec:'8GB RAM · 256GB SSD · Intel', available:true },
+  { id:50, name:'MacBook Pro 16" 2019', category:'macbook', price:699, condition:'Good', spec:'16GB RAM · 512GB SSD · Intel', available:false },
+  { id:51, name:'MacBook Air 13" M1 (2020)', category:'macbook', price:649, condition:'Excellent', spec:'8GB RAM · 256GB SSD', available:true },
+  { id:52, name:'MacBook Pro 13" M1 (2020)', category:'macbook', price:749, condition:'Like New', spec:'8GB RAM · 256GB SSD', available:true },
+  { id:53, name:'MacBook Pro 14" M1 Pro (2021)', category:'macbook', price:999, condition:'Like New', spec:'16GB RAM · 512GB SSD', available:true },
+  { id:54, name:'MacBook Pro 16" M1 Max (2021)', category:'macbook', price:1299, condition:'Like New', spec:'32GB RAM · 1TB SSD', available:false },
+  { id:55, name:'MacBook Air 13" M2 (2022)', category:'macbook', price:799, condition:'Like New', spec:'8GB RAM · 256GB SSD', available:true },
+  { id:56, name:'MacBook Pro 13" M2 (2022)', category:'macbook', price:849, condition:'Like New', spec:'8GB RAM · 256GB SSD', available:true },
+  { id:57, name:'MacBook Pro 14" M2 Pro (2023)', category:'macbook', price:1149, condition:'Like New', spec:'16GB RAM · 512GB SSD', available:true },
+  { id:58, name:'MacBook Pro 16" M2 Max (2023)', category:'macbook', price:1499, condition:'Like New', spec:'32GB RAM · 1TB SSD', available:false },
+  { id:59, name:'MacBook Air 13" M3 (2024)', category:'macbook', price:899, condition:'Like New', spec:'8GB RAM · 256GB SSD', available:true },
+  { id:60, name:'MacBook Air 15" M3 (2024)', category:'macbook', price:999, condition:'Like New', spec:'8GB RAM · 256GB SSD', available:true },
+  { id:61, name:'MacBook Pro 14" M3 Pro (2024)', category:'macbook', price:1349, condition:'Like New', spec:'18GB RAM · 512GB SSD', available:true },
+  { id:62, name:'MacBook Pro 16" M3 Max (2024)', category:'macbook', price:1749, condition:'Like New', spec:'36GB RAM · 1TB SSD', available:false },
+  { id:63, name:'MacBook Air 13" M4 (2025)', category:'macbook', price:949, condition:'Like New', spec:'16GB RAM · 256GB SSD', available:true },
+  { id:64, name:'MacBook Air 15" M4 (2025)', category:'macbook', price:1099, condition:'Like New', spec:'16GB RAM · 256GB SSD', available:true },
+];
+
+const INV_VERSION = 'v4';
+function loadData() {
+  const ver = localStorage.getItem('techflip_inv_version');
+  if (ver !== INV_VERSION) {
+    localStorage.removeItem('techflip_inventory');
+    localStorage.setItem('techflip_inv_version', INV_VERSION);
+  }
+  const inv = localStorage.getItem('techflip_inventory');
+  const sales = localStorage.getItem('techflip_sales');
+  return {
+    inventory: inv ? JSON.parse(inv) : DEFAULT_INVENTORY,
+    sales: sales ? JSON.parse(sales) : []
+  };
+}
+function saveInventory(inv) { localStorage.setItem('techflip_inventory', JSON.stringify(inv)); }
+function saveSales(sales) { localStorage.setItem('techflip_sales', JSON.stringify(sales)); }
+
+// ── Google Sheets sync ──
+const GS_URL = 'https://script.google.com/macros/s/AKfycbyrj9ZW406XMJSezDtzoJggYDy3oydKgH7HG4drpOpbM409Al_0PAbWMNDuoT4hFURKcw/exec';
+let gsSyncing = false;
+
+async function gsPost(payload) {
+  try {
+    const res = await fetch(GS_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
+  } catch(err) {
+    console.warn('Google Sheets sync failed:', err);
+    return { success: false, error: err.toString() };
+  }
+}
+
+async function gsLoadSales() {
+  try {
+    const res = await fetch(GS_URL + '?action=getSales');
+    const data = await res.json();
+    if (data.success && data.sales && data.sales.length > 0) {
+      // Merge: prefer Google Sheets as source of truth
+      state.sales = data.sales.map(s => ({
+        id: s.id,
+        item: s.item,
+        price: parseFloat(s.price) || 0,
+        date: s.date,
+        platform: s.platform,
+        buyer: s.buyer || '',
+        notes: s.notes || ''
+      }));
+      saveSales(state.sales);
+      renderOrdersTable();
+      renderStats();
+      updateSyncStatus('synced');
+    } else {
+      updateSyncStatus('local');
+    }
+  } catch(err) {
+    console.warn('Could not load from Google Sheets:', err);
+    updateSyncStatus('offline');
+  }
+}
+
+function updateSyncStatus(status) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  const map = {
+    syncing:  { text: '🔄 Syncing...', color: 'var(--yellow)' },
+    synced:   { text: '☁️ Saved to Google Sheets', color: 'var(--green)' },
+    offline:  { text: '⚠️ Offline — saved locally only', color: 'var(--accent2)' },
+    local:    { text: '📋 No cloud data yet — log your first sale', color: 'var(--muted)' },
+  };
+  const s = map[status] || map.offline;
+  el.textContent = s.text;
+  el.style.color = s.color;
+}
+
+let state = loadData();
+
+// ════════════════════════════════
+//  PURCHASE LOG
+// ════════════════════════════════
+
+function loadPurchases() {
+  const p = localStorage.getItem('techflip_purchases');
+  return p ? JSON.parse(p) : [];
+}
+function savePurchasesLocal(purchases) {
+  localStorage.setItem('techflip_purchases', JSON.stringify(purchases));
+}
+
+async function logPurchase() {
+  const item     = document.getElementById('pur-item').value.trim();
+  const cat      = document.getElementById('pur-cat').value;
+  const spec     = document.getElementById('pur-spec').value.trim();
+  const condition= document.getElementById('pur-condition').value;
+  const price    = document.getElementById('pur-price').value;
+  const target   = document.getElementById('pur-target').value;
+  const date     = document.getElementById('pur-date').value;
+  const source   = document.getElementById('pur-source').value;
+  const seller   = document.getElementById('pur-seller').value.trim();
+  const imei     = document.getElementById('pur-imei').value.trim();
+  const notes    = document.getElementById('pur-notes').value.trim();
+
+  if (!item)  { showToast('Please enter the device name!', true); return; }
+  if (!price) { showToast('Please enter the purchase price!', true); return; }
+  if (!date)  { showToast('Please enter the purchase date!', true); return; }
+
+  const purchase = {
+    id: Date.now().toString(),
+    item, category: cat, spec, condition,
+    price: parseFloat(price),
+    target: parseFloat(target) || 0,
+    date, source, seller, imei, notes,
+    status: 'In Stock'
+  };
+
+  // Save locally
+  const purchases = loadPurchases();
+  purchases.push(purchase);
+  savePurchasesLocal(purchases);
+
+  // Also auto-add to storefront inventory
+  const invItem = {
+    id: Date.now() + 1,
+    name: item,
+    category: cat,
+    price: parseFloat(target) || parseFloat(price),
+    condition,
+    spec: spec || 'Unlocked',
+    available: true
+  };
+  state.inventory.push(invItem);
+  saveInventory(state.inventory);
+
+  // Clear form
+  ['pur-item','pur-spec','pur-price','pur-target','pur-seller','pur-imei','pur-notes'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('pur-date').valueAsDate = new Date();
+
+  // Sync to Google Sheets
+  updateSyncStatus('syncing');
+  showToast('Purchase logged! Syncing... 🔄');
+  try {
+    await gsPost({ action: 'logPurchase', purchase });
+    showToast('✅ Purchase saved to Google Sheets!');
+    updateSyncStatus('synced');
+  } catch(e) {
+    showToast('Saved locally — Sheets sync failed', true);
+    updateSyncStatus('offline');
+  }
+
+  renderAll();
+}
+
+async function deletePurchase(id) {
+  const purchases = loadPurchases().filter(p => p.id !== id);
+  savePurchasesLocal(purchases);
+  renderPurchasesTable();
+  renderStats();
+  showToast('Purchase deleted.');
+}
+
+function markPurchaseSold(id) {
+  const purchases = loadPurchases().map(p => p.id === id ? {...p, status: 'Sold'} : p);
+  savePurchasesLocal(purchases);
+  renderPurchasesTable();
+  renderStats();
+  showToast('Marked as sold!');
+}
+
+function renderPurchasesTable() {
+  const tbody   = document.getElementById('purchases-body');
+  const empty   = document.getElementById('purchases-empty');
+  const table   = document.getElementById('purchases-table');
+  const purchases = [...loadPurchases()].reverse();
+
+  tbody.innerHTML = '';
+  if (purchases.length === 0) {
+    empty.style.display = 'block';
+    table.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  table.style.display = 'table';
+
+  purchases.forEach((p, idx) => {
+    const profit = p.target ? (p.target - p.price) : 0;
+    const profitColor = profit > 0 ? 'var(--green)' : 'var(--accent2)';
+    const statusColor = p.status === 'Sold' ? 'var(--muted)' : 'var(--yellow)';
+    const tr = document.createElement('tr');
+    tr.style.opacity = p.status === 'Sold' ? '0.5' : '1';
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-family:var(--font-mono);font-size:11px">${purchases.length - idx}</td>
+      <td style="font-weight:500">${p.item}</td>
+      <td style="color:var(--muted);font-size:12px">${p.spec || '—'}</td>
+      <td style="font-size:12px;color:var(--yellow)">${p.condition}</td>
+      <td style="color:var(--accent2);font-family:var(--font-display);font-size:18px">$${p.price.toFixed(0)}</td>
+      <td style="color:var(--muted)">${p.target ? '$'+p.target.toFixed(0) : '—'}</td>
+      <td style="color:${profitColor};font-weight:600">${profit > 0 ? '+$'+profit.toFixed(0) : '—'}</td>
+      <td style="color:var(--muted)">${formatDate(p.date)}</td>
+      <td><span class="platform-chip ${p.source==='Facebook Marketplace'?'chip-fb':p.source==='OfferUp'?'chip-ou':'chip-other'}">${p.source}</span></td>
+      <td>${p.seller || '—'}</td>
+      <td style="color:var(--muted);font-size:11px;font-family:var(--font-mono)">${p.imei || '—'}</td>
+      <td style="color:${statusColor};font-family:var(--font-mono);font-size:10px;letter-spacing:1px">${p.status}</td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          ${p.status !== 'Sold' ? `<button class="delete-btn" title="Mark Sold" onclick="markPurchaseSold('${p.id}')" style="color:var(--green)">✓</button>` : ''}
+          <button class="delete-btn" onclick="deletePurchase('${p.id}')">✕</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function exportPurchasesCSV() {
+  const purchases = loadPurchases();
+  if (!purchases.length) { showToast('No purchases to export!', true); return; }
+  const headers = ['#','Device','Spec','Condition','Bought For','Target Price','Potential Profit','Date','Source','Seller','IMEI','Status','Notes'];
+  const rows = purchases.map((p,i) => [
+    i+1, p.item, p.spec||'', p.condition,
+    p.price, p.target||'', p.target ? (p.target-p.price) : '',
+    p.date, p.source, p.seller||'', p.imei||'', p.status, p.notes||''
+  ]);
+  const csv = [headers,...rows].map(r=>r.join('\t')).join('\n');
+  const win = window.open('', '_blank');
+  win.document.write('<pre style="font-family:monospace;font-size:13px;padding:20px;">'+csv+'</pre>');
+  win.document.title = 'TechFlip Purchases Export';
+  showToast('Purchases opened in new tab — copy into Google Sheets');
+}
+
+// ════════════════════════════════
+//  STOREFRONT
+// ════════════════════════════════
+function renderStorefront(filter='all') {
+  const grid = document.getElementById('inventory-grid');
+  let items = state.inventory;
+  if (filter === 'available') items = items.filter(i => i.available);
+  else if (filter !== 'all') items = items.filter(i => i.category === filter);
+
+  grid.innerHTML = '';
+  if (items.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)"><p style="font-size:40px">🤷</p><p style="margin-top:12px">Nothing here yet.</p></div>`;
+    return;
+  }
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'device-card' + (item.available ? '' : ' sold');
+    card.innerHTML = `
+      <span class="card-badge ${item.available ? 'badge-available' : 'badge-sold'}">${item.available ? 'Available' : 'Sold'}</span>
+      <span class="card-emoji">${EMOJIS[item.category] || '📦'}</span>
+      <div class="card-body">
+        <div class="card-brand">${item.category.toUpperCase()}</div>
+        <div class="card-name">${item.name}</div>
+        <div class="card-spec">${item.spec}</div>
+        <div class="card-footer">
+          <span class="card-price">$${item.price}</span>
+          <span class="card-condition">${item.condition}</span>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function filterInventory(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStorefront(cat);
+}
+
+// ════════════════════════════════
+//  CRM
+// ════════════════════════════════
+function populateItemDropdown() {
+  const sel = document.getElementById('crm-item');
+  sel.innerHTML = '<option value="">— Select Device —</option>';
+  state.inventory.forEach(item => {
+    const opt = document.createElement('option');
+    opt.value = item.name;
+    opt.textContent = `${item.name} · $${item.price}`;
+    sel.appendChild(opt);
+  });
+}
+
+function renderStats() {
+  const sales = state.sales;
+  document.getElementById('stat-count').textContent = sales.length;
+  const rev = sales.reduce((s, x) => s + parseFloat(x.price||0), 0);
+  document.getElementById('stat-revenue').textContent = '$' + rev.toLocaleString();
+  document.getElementById('stat-stock').textContent = state.inventory.filter(i => i.available).length;
+
+  const purchases = loadPurchases();
+  const spent = purchases.reduce((s, p) => s + parseFloat(p.price||0), 0);
+  const profit = rev - spent;
+  document.getElementById('stat-spent').textContent = '$' + Math.round(spent).toLocaleString();
+  document.getElementById('stat-profit').textContent = (profit >= 0 ? '+' : '') + '$' + Math.round(profit).toLocaleString();
+  document.getElementById('stat-profit').style.color = profit >= 0 ? 'var(--green)' : 'var(--accent2)';
+  document.getElementById('stat-purchased').textContent = purchases.length;
+}
+
+function renderOrdersTable() {
+  const tbody = document.getElementById('orders-body');
+  const empty = document.getElementById('empty-state');
+  const sales = [...state.sales].reverse();
+  tbody.innerHTML = '';
+  if (sales.length === 0) {
+    empty.style.display = 'block';
+    document.querySelector('.orders-table').style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  document.querySelector('.orders-table').style.display = 'table';
+  sales.forEach((sale, idx) => {
+    const platClass = sale.platform === 'Facebook Marketplace' ? 'chip-fb' : sale.platform === 'OfferUp' ? 'chip-ou' : 'chip-other';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-family:var(--font-mono);font-size:11px">${sales.length - idx}</td>
+      <td style="font-weight:500">${sale.item}</td>
+      <td style="color:var(--green);font-family:var(--font-display);font-size:18px">$${parseFloat(sale.price).toFixed(0)}</td>
+      <td style="color:var(--muted)">${formatDate(sale.date)}</td>
+      <td><span class="platform-chip ${platClass}">${sale.platform}</span></td>
+      <td>${sale.buyer || '—'}</td>
+      <td style="color:var(--muted);font-size:12px;max-width:180px">${sale.notes || '—'}</td>
+      <td><button class="delete-btn" onclick="deleteSale('${sale.id}')">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderInventoryManager() {
+  const list = document.getElementById('inv-manager-list');
+  list.innerHTML = '';
+  if (state.inventory.length === 0) {
+    list.innerHTML = '<div style="padding:20px;color:var(--muted);text-align:center">No inventory items yet.</div>';
+    return;
+  }
+  state.inventory.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'inv-row';
+    row.innerHTML = `
+      <div>
+        <span>${EMOJIS[item.category]||'📦'} ${item.name}</span>
+        <span style="color:var(--muted);font-size:11px;display:block;margin-top:2px">${item.spec} · $${item.price}</span>
+      </div>
+      <button class="inv-toggle ${item.available ? 'avail' : 'sold-t'}" onclick="toggleAvail(${item.id})">
+        ${item.available ? '✅ Available' : '❌ Sold'}
+      </button>
+      <button class="delete-btn" onclick="removeInventory(${item.id})">✕</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function toggleAvail(id) {
+  state.inventory = state.inventory.map(i => i.id === id ? {...i, available: !i.available} : i);
+  saveInventory(state.inventory);
+  renderAll();
+  showToast('Availability updated!');
+}
+
+function removeInventory(id) {
+  state.inventory = state.inventory.filter(i => i.id !== id);
+  saveInventory(state.inventory);
+  renderAll();
+  showToast('Item removed.');
+}
+
+async function logSale() {
+  const sel = document.getElementById('crm-item').value;
+  const custom = document.getElementById('crm-custom').value.trim();
+  const item = custom || sel;
+  const price = document.getElementById('crm-price').value;
+  const date = document.getElementById('crm-date').value;
+  const platform = document.getElementById('crm-platform').value;
+  const buyer = document.getElementById('crm-buyer').value.trim();
+  const notes = document.getElementById('crm-notes').value.trim();
+
+  if (!item) { showToast('Please select or enter an item!', true); return; }
+  if (!price) { showToast('Please enter a price!', true); return; }
+  if (!date) { showToast('Please enter a date!', true); return; }
+
+  const sale = { id: Date.now().toString(), item, price: parseFloat(price), date, platform, buyer, notes };
+
+  // Save locally first (instant)
+  state.sales.push(sale);
+  saveSales(state.sales);
+
+  // Auto-mark as sold on storefront
+  if (sel) {
+    state.inventory = state.inventory.map(i => i.name === sel ? {...i, available:false} : i);
+    saveInventory(state.inventory);
+  }
+
+  // Clear form
+  document.getElementById('crm-item').value = '';
+  document.getElementById('crm-custom').value = '';
+  document.getElementById('crm-price').value = '';
+  document.getElementById('crm-date').valueAsDate = new Date();
+  document.getElementById('crm-buyer').value = '';
+  document.getElementById('crm-notes').value = '';
+
+  renderAll();
+  showToast('Sale logged! Syncing to Google Sheets... 🔄');
+  updateSyncStatus('syncing');
+
+  // Sync to Google Sheets
+  const result = await gsPost({ action: 'logSale', sale });
+  if (result.success) {
+    showToast('✅ Sale saved to Google Sheets!');
+    updateSyncStatus('synced');
+  } else {
+    showToast('⚠️ Saved locally — Sheets sync failed', true);
+    updateSyncStatus('offline');
+  }
+}
+
+function addInventoryItem() {
+  const name = document.getElementById('inv-name').value.trim();
+  const price = document.getElementById('inv-price').value;
+  const cat = document.getElementById('inv-cat').value;
+  const condition = document.getElementById('inv-condition').value;
+  const spec = document.getElementById('inv-spec').value.trim();
+
+  if (!name || !price) { showToast('Name and price required!', true); return; }
+
+  const item = {
+    id: Date.now(),
+    name, category: cat,
+    price: parseFloat(price),
+    condition,
+    spec: spec || 'Unlocked',
+    available: true
+  };
+  state.inventory.push(item);
+  saveInventory(state.inventory);
+
+  document.getElementById('inv-name').value = '';
+  document.getElementById('inv-price').value = '';
+  document.getElementById('inv-spec').value = '';
+
+  renderAll();
+  showToast('Added to storefront! ✅');
+}
+
+async function deleteSale(id) {
+  state.sales = state.sales.filter(s => s.id !== id);
+  saveSales(state.sales);
+  renderAll();
+  showToast('Deleting...');
+  updateSyncStatus('syncing');
+  const result = await gsPost({ action: 'deleteSale', id });
+  if (result.success) {
+    showToast('Sale deleted from Google Sheets.');
+    updateSyncStatus('synced');
+  } else {
+    showToast('Deleted locally — Sheets sync failed', true);
+    updateSyncStatus('offline');
+  }
+}
+
+function exportCSV() {
+  if (!state.sales.length) { showToast('No sales to export!', true); return; }
+  // Build CSV text and open in new tab so user can copy it
+  const headers = ['#','Item','Price','Date','Platform','Buyer','Notes'];
+  const rows = state.sales.map((s, i) => [i+1, s.item, s.price, s.date, s.platform, s.buyer||'', s.notes||'']);
+  const csv = [headers, ...rows].map(r => r.join('\t')).join('\n');
+  const win = window.open('', '_blank');
+  win.document.write('<pre style="font-family:monospace;font-size:13px;padding:20px;">' + csv + '</pre>');
+  win.document.title = 'TechFlip Sales Export';
+  showToast('Sales data opened in new tab — copy and paste into Google Sheets');
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  return `${m}/${day}/${y}`;
+}
+
+// ════════════════════════════════
+//  HELPERS
+// ════════════════════════════════
+function renderAll() {
+  const activeBtn = document.querySelector('.filter-btn.active');
+  const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
+  renderStorefront(activeFilter);
+  renderStats();
+  renderOrdersTable();
+  renderInventoryManager();
+  renderPurchasesTable();
+  populateItemDropdown();
+}
+
+function switchView(view, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  el.classList.add('active');
+  if (view === 'crm') gsLoadSales();
+  if (view === 'sell') { initSellModels(sellFormData.type || 'iPhone'); sellStep(1); }
+}
+
+function showToast(msg, isError=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isError ? 'var(--accent2)' : 'var(--green)';
+  t.style.color = isError ? '#fff' : '#000';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
 
 
 
+// ════════════════════════════════
+//  SELL FORM
+// ════════════════════════════════
+const SELL_MODELS = {
+  iPhone: ['iPhone 14','iPhone 14 Plus','iPhone 14 Pro','iPhone 14 Pro Max','iPhone 15','iPhone 15 Plus','iPhone 15 Pro','iPhone 15 Pro Max','iPhone 16','iPhone 16 Plus','iPhone 16 Pro','iPhone 16 Pro Max','iPhone 17','iPhone 17 Pro','iPhone 17 Pro Max'],
+  Samsung: ['Galaxy S21','Galaxy S21+','Galaxy S21 Ultra','Galaxy S22','Galaxy S22+','Galaxy S22 Ultra','Galaxy S23','Galaxy S23+','Galaxy S23 Ultra','Galaxy S24','Galaxy S24+','Galaxy S24 Ultra','Galaxy S25','Galaxy S25+','Galaxy S25 Ultra'],
+  iPad: ['iPad 7th Gen (2019)','iPad Mini 5th Gen (2019)','iPad 8th Gen (2020)','iPad Pro 11in (2020)','iPad Pro 12.9in (2020)','iPad Mini 6th Gen (2021)','iPad 9th Gen (2021)','iPad Pro 11in M1 (2021)','iPad Pro 12.9in M1 (2021)','iPad Air 5th Gen M1 (2022)','iPad 10th Gen (2022)','iPad Pro 11in M2 (2022)','iPad Pro 12.9in M2 (2022)','iPad Air 11in M2 (2024)','iPad Air 13in M2 (2024)','iPad Pro 11in M4 (2024)','iPad Pro 13in M4 (2024)','iPad Mini 7th Gen (2024)'],
+  MacBook: ['MacBook Air 13in Intel (2019)','MacBook Pro 13in Intel (2019)','MacBook Pro 16in Intel (2019)','MacBook Air M1 (2020)','MacBook Pro 13in M1 (2020)','MacBook Pro 14in M1 Pro (2021)','MacBook Pro 16in M1 Max (2021)','MacBook Air 13in M2 (2022)','MacBook Pro 13in M2 (2022)','MacBook Pro 14in M2 Pro (2023)','MacBook Pro 16in M2 Max (2023)','MacBook Air 13in M3 (2024)','MacBook Air 15in M3 (2024)','MacBook Pro 14in M3 Pro (2024)','MacBook Pro 16in M3 Max (2024)','MacBook Air 13in M4 (2025)','MacBook Air 15in M4 (2025)']
+};
 
+let sellFormData = {
+  type: 'iPhone', model: '', storage: '128GB',
+  carrier: 'Unlocked', condition: 'Like New',
+  box: 'Yes', details: '', name: '', phone: '',
+  location: '', contactPref: 'Text', asking: ''
+};
 
+function initSellModels(type) {
+  const sel = document.getElementById('sell-model');
+  if (!sel) return;
+  const models = SELL_MODELS[type] || [];
+  sel.innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
+  // show/hide carrier for non-phone devices
+  const carrierGroup = document.getElementById('sell-carrier-group');
+  if (carrierGroup) carrierGroup.style.display = (type === 'iPad' || type === 'MacBook') ? 'none' : 'block';
+  // update storage options for MacBook
+  const storageSel = document.getElementById('sell-storage');
+  if (storageSel) {
+    if (type === 'MacBook') {
+      storageSel.innerHTML = '<option value="256GB">256GB</option><option value="512GB">512GB</option><option value="1TB">1TB</option><option value="2TB">2TB</option>';
+    } else {
+      storageSel.innerHTML = '<option value="64GB">64GB</option><option value="128GB" selected>128GB</option><option value="256GB">256GB</option><option value="512GB">512GB</option><option value="1TB">1TB</option>';
+    }
+  }
+}
 
-iPHONE 14–17
-FROM $429
-MacBOOK
-FROM $449
-SAMSUNG
-FROM $259
-AVG SELL TIME
-3–7 DAYS
-￼
-MacBOOK AIR M4
-￼
-iPHONE 16
-￼
-iPHONE 16 PRO
-￼
-GALAXY S25
-￼
-MacBOOK PRO M4
+function selectSellType(btn) {
+  document.querySelectorAll('.sell-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  sellFormData.type = btn.dataset.type;
+  initSellModels(btn.dataset.type);
+}
 
-UNLOCKED
+function selectSellCond(btn) {
+  document.querySelectorAll('.sell-cond-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  sellFormData.condition = btn.dataset.cond;
+}
 
-FULLY TESTED
+function selectSellBox(btn) {
+  document.querySelectorAll('.sell-box-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  sellFormData.box = btn.dataset.box;
+}
 
-IMEI VERIFIED
+function sellStep(step) {
+  // Collect current data
+  const modelEl = document.getElementById('sell-model');
+  const storageEl = document.getElementById('sell-storage');
+  const carrierEl = document.getElementById('sell-carrier');
+  if (modelEl) sellFormData.model = modelEl.value;
+  if (storageEl) sellFormData.storage = storageEl.value;
+  if (carrierEl) sellFormData.carrier = carrierEl.value;
 
-BEST PRICE
+  if (step === 3) {
+    sellFormData.details = document.getElementById('sell-details').value.trim();
+    // Build summary
+    const isPhone = sellFormData.type === 'iPhone' || sellFormData.type === 'Samsung';
+    const summary = document.getElementById('sell-summary');
+    if (summary) {
+      summary.innerHTML = `
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--accent2);margin-bottom:10px;">YOUR SUBMISSION SUMMARY</div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 16px;">
+          <span style="color:var(--muted);">Device</span><span>${sellFormData.type} ${sellFormData.model}</span>
+          <span style="color:var(--muted);">Storage</span><span>${sellFormData.storage}</span>
+          ${isPhone ? `<span style="color:var(--muted);">Carrier</span><span>${sellFormData.carrier}</span>` : ''}
+          <span style="color:var(--muted);">Condition</span><span>${sellFormData.condition}</span>
+          <span style="color:var(--muted);">Box</span><span>${sellFormData.box}</span>
+          ${sellFormData.details ? `<span style="color:var(--muted);">Notes</span><span>${sellFormData.details}</span>` : ''}
+        </div>
+      `;
+    }
+  }
 
-NJ LOCAL · CASH READY
-FILTER:
-All
-iPhone
-iPad
-Samsung
-MacBook
-✅ Available Only
-INTERESTED? LET'S DEAL.
-DM me on Facebook Marketplace or OfferUp. Fast replies, fair prices.
-👤
-Facebook Marketplace
-🛒
-OfferUp
+  // Show/hide steps
+  document.querySelectorAll('.sell-step').forEach(s => s.style.display = 'none');
+  const stepEl = document.getElementById('sell-step-' + step);
+  if (stepEl) stepEl.style.display = 'block';
 
+  // Update progress indicators
+  document.querySelectorAll('.sell-step-ind').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i + 1 < step) el.classList.add('done');
+    else if (i + 1 === step) el.classList.add('active');
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function submitSellForm() {
+  const name = document.getElementById('sell-name').value.trim();
+  const phone = document.getElementById('sell-phone').value.trim();
+  const location = document.getElementById('sell-location').value.trim();
+  const contactPref = document.getElementById('sell-contact-pref').value;
+  const asking = document.getElementById('sell-asking').value.trim();
+
+  if (!name) { showToast('Please enter your name', true); return; }
+  if (!phone) { showToast('Please enter your phone number', true); return; }
+  if (!location) { showToast('Please enter your location', true); return; }
+
+  const btn = document.getElementById('sell-submit-btn');
+  btn.textContent = '⏳ Submitting...';
+  btn.disabled = true;
+
+  const lead = {
+    id: Date.now().toString(),
+    type: sellFormData.type,
+    model: document.getElementById('sell-model').value,
+    storage: sellFormData.storage,
+    carrier: sellFormData.carrier,
+    condition: sellFormData.condition,
+    box: sellFormData.box,
+    details: sellFormData.details,
+    name, phone, location, contactPref,
+    asking: asking ? '$' + asking : 'Open to offer',
+    submittedAt: new Date().toLocaleString()
+  };
+
+  // Save to Google Sheets as a lead
+  try {
+    await gsPost({ action: 'logLead', lead });
+  } catch(e) {
+    console.warn('Lead sync failed:', e);
+  }
+
+  // Save locally as backup
+  const leads = JSON.parse(localStorage.getItem('techflip_leads') || '[]');
+  leads.push(lead);
+  localStorage.setItem('techflip_leads', JSON.stringify(leads));
+
+  // Show success
+  document.querySelectorAll('.sell-step').forEach(s => s.style.display = 'none');
+  document.getElementById('sell-progress').style.display = 'none';
+  document.getElementById('sell-success').style.display = 'block';
+  showToast('Submitted! We will be in touch soon 🎉');
+}
+
+function resetSellForm() {
+  document.getElementById('sell-progress').style.display = 'flex';
+  document.getElementById('sell-success').style.display = 'none';
+  document.querySelectorAll('.sell-type-btn').forEach((b,i) => { b.classList.toggle('active', i===0); });
+  document.querySelectorAll('.sell-cond-btn').forEach((b,i) => { b.classList.toggle('active', i===0); });
+  document.querySelectorAll('.sell-box-btn').forEach((b,i) => { b.classList.toggle('active', i===0); });
+  ['sell-name','sell-phone','sell-location','sell-asking','sell-details'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  sellFormData = { type:'iPhone', model:'', storage:'128GB', carrier:'Unlocked', condition:'Like New', box:'Yes', details:'', name:'', phone:'', location:'', contactPref:'Text', asking:'' };
+  initSellModels('iPhone');
+  sellStep(1);
+}
+
+// Init sell form models on load
+
+// ════════════════════════════════
+//  IMEI CHECKER
+// ════════════════════════════════
+
+function luhnCheck(imei) {
+  if (!/^\d{15}$/.test(imei)) return false;
+  let sum = 0;
+  for (let i = 0; i < 15; i++) {
+    let d = parseInt(imei[i]);
+    if (i % 2 === 1) { d *= 2; if (d > 9) d -= 9; }
+    sum += d;
+  }
+  return sum % 10 === 0;
+}
+
+function getTacInfo(imei) {
+  const tac = imei.substring(0, 8);
+  const brands = {
+    '35': 'Apple iPhone', '01': 'Apple iPhone', '35376': 'Apple iPhone',
+    '35906': 'Samsung', '35404': 'Samsung', '35139': 'Samsung',
+    '86': 'Chinese/Generic brand', '99': 'Unknown/Generic'
+  };
+  // Apple TACs start with 01 or 35, Samsung with 35 too but different ranges
+  if (['013954','013998','353079','353282','353288','353296','354916','355299','355304','355399','356748','357355','357401','357522'].some(t => tac.startsWith(t.substring(0,6)))) return 'Apple iPhone';
+  if (imei.startsWith('01')) return 'Apple device';
+  if (imei.startsWith('35390') || imei.startsWith('35906') || imei.startsWith('35952')) return 'Samsung Galaxy';
+  if (imei.startsWith('86')) return '⚠️ Likely Chinese/Generic brand';
+  return 'Unknown brand (verify manually)';
+}
+
+function runImeiCheck() {
+  const raw = document.getElementById('imei-input').value.trim();
+  const result = document.getElementById('imei-result');
+  const btn = document.getElementById('imei-btn');
+
+  if (!raw) { showToast('Please enter an IMEI number!', true); return; }
+
+  btn.textContent = 'Checking...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.textContent = 'Check IMEI';
+    btn.disabled = false;
+
+    const isNumeric = /^\d+$/.test(raw);
+    const isSerial = /^[A-Z0-9]{10,12}$/.test(raw) && !isNumeric;
+    const is15Digits = raw.length === 15 && isNumeric;
+    const luhnValid = is15Digits ? luhnCheck(raw) : null;
+    const brandGuess = is15Digits ? getTacInfo(raw) : null;
+
+    let status, color, icon, summary, details;
+
+    if (isSerial) {
+      status = 'SERIAL DETECTED';
+      color = 'var(--accent)';
+      icon = '🔵';
+      summary = 'This looks like a serial number, not an IMEI.';
+      details = [
+        { label: 'Type', value: 'Serial Number', ok: true },
+        { label: 'Format', value: 'Valid serial format', ok: true },
+        { label: 'IMEI Check', value: 'N/A — serial numbers cannot be Luhn-validated', ok: null },
+        { label: 'Next Step', value: "Use Apple Checkcoverage or Samsung's site to verify this serial", ok: null },
+      ];
+    } else if (!is15Digits) {
+      status = 'INVALID FORMAT';
+      color = 'var(--accent2)';
+      icon = '❌';
+      summary = 'IMEI must be exactly 15 digits. Check the number and try again.';
+      details = [
+        { label: 'Length', value: raw.length + ' digits (need 15)', ok: false },
+        { label: 'Format', value: isNumeric ? 'Numeric ✓' : 'Contains non-numeric characters ✗', ok: isNumeric },
+        { label: 'Recommendation', value: 'Dial *#06# on the device to get the correct IMEI', ok: null },
+      ];
+    } else if (!luhnValid) {
+      status = 'LIKELY COUNTERFEIT';
+      color = 'var(--accent2)';
+      icon = '🚨';
+      summary = 'This IMEI fails the Luhn checksum — a strong sign of a fake or cloned device.';
+      details = [
+        { label: 'Length', value: '15 digits ✓', ok: true },
+        { label: 'Luhn Checksum', value: 'FAILED ✗ — invalid IMEI', ok: false },
+        { label: 'Counterfeit Risk', value: 'HIGH — do not purchase', ok: false },
+        { label: 'Brand Signal', value: brandGuess, ok: null },
+        { label: 'Action', value: 'Refuse the device or demand a full refund guarantee', ok: null },
+      ];
+    } else {
+      const isSuspect = brandGuess && brandGuess.includes('⚠️');
+      status = isSuspect ? 'PASSES — VERIFY CARRIER' : 'PASSES LOCAL CHECK';
+      color = isSuspect ? 'var(--yellow)' : 'var(--green)';
+      icon = isSuspect ? '⚠️' : '✅';
+      summary = isSuspect
+        ? 'IMEI is structurally valid but brand signals suggest a Chinese/generic device. Verify with a paid IMEI service.'
+        : "IMEI passes format and checksum validation. Run a carrier blacklist check to confirm it's clean.";
+      details = [
+        { label: 'Length', value: '15 digits ✓', ok: true },
+        { label: 'Luhn Checksum', value: 'PASSED ✓', ok: true },
+        { label: 'Brand Signal', value: brandGuess, ok: !isSuspect },
+        { label: 'Blacklist Status', value: 'Cannot verify locally — check imei.info or swappa.com/esn', ok: null },
+        { label: 'Activation Lock', value: "Cannot verify locally — ask seller to show Settings → About", ok: null },
+        { label: 'IMEI', value: raw, ok: null },
+      ];
+    }
+
+    result.style.display = 'block';
+    result.innerHTML = `
+      <div style="background:var(--card);border:2px solid ${color};border-radius:12px;padding:24px;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <span style="font-size:32px;">${icon}</span>
+          <div>
+            <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:2px;color:${color};">${status}</div>
+            <div style="font-size:14px;color:var(--muted);margin-top:4px;">${summary}</div>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:16px;display:flex;flex-direction:column;gap:10px;">
+          ${details.map(d => `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+              <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);white-space:nowrap;">${d.label.toUpperCase()}</span>
+              <span style="font-size:13px;text-align:right;color:${d.ok === true ? 'var(--green)' : d.ok === false ? 'var(--accent2)' : 'var(--text)'};">${d.value}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="https://www.imei.info/imei-checker/?imei=${raw}" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px;">🔗 Check on imei.info</a>
+        <a href="https://swappa.com/esn?imei=${raw}" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px;">🔗 Check on Swappa</a>
+        <a href="https://checkcoverage.apple.com" target="_blank" class="btn btn-outline" style="font-size:12px;padding:8px 14px;">🍎 Apple Coverage Check</a>
+      </div>
+    `;
+  }, 800);
+}
+
+// ════════════════════════════════
+//  BUY PRICE CALCULATOR
+// ════════════════════════════════
+
+const PRICER_MODELS = {
+  iphone: [
+    { name:'iPhone 14', base:520 },
+    { name:'iPhone 14 Plus', base:580 },
+    { name:'iPhone 14 Pro', base:680 },
+    { name:'iPhone 14 Pro Max', base:750 },
+    { name:'iPhone 15', base:620 },
+    { name:'iPhone 15 Plus', base:700 },
+    { name:'iPhone 15 Pro', base:800 },
+    { name:'iPhone 15 Pro Max', base:920 },
+    { name:'iPhone 16', base:750 },
+    { name:'iPhone 16 Plus', base:830 },
+    { name:'iPhone 16 Pro', base:920 },
+    { name:'iPhone 16 Pro Max', base:1050 },
+    { name:'iPhone 17', base:870 },
+    { name:'iPhone 17 Pro', base:1020 },
+    { name:'iPhone 17 Pro Max', base:1150 },
+  ],
+  samsung: [
+    { name:'Galaxy S21', base:320 },
+    { name:'Galaxy S21+', base:380 },
+    { name:'Galaxy S21 Ultra', base:460 },
+    { name:'Galaxy S22', base:420 },
+    { name:'Galaxy S22+', base:490 },
+    { name:'Galaxy S22 Ultra', base:600 },
+    { name:'Galaxy S23', base:530 },
+    { name:'Galaxy S23+', base:620 },
+    { name:'Galaxy S23 Ultra', base:730 },
+    { name:'Galaxy S24', base:650 },
+    { name:'Galaxy S24+', base:750 },
+    { name:'Galaxy S24 Ultra', base:930 },
+    { name:'Galaxy S25', base:790 },
+    { name:'Galaxy S25+', base:900 },
+    { name:'Galaxy S25 Ultra', base:1100 },
+  ],
+  ipad: [
+    { name:'iPad 7th Gen (2019)', base:200 },
+    { name:'iPad Mini 5th Gen (2019)', base:230 },
+    { name:'iPad 8th Gen (2020)', base:210 },
+    { name:'iPad Pro 11" (2020)', base:440 },
+    { name:'iPad Pro 12.9" (2020)', base:560 },
+    { name:'iPad Mini 6th Gen (2021)', base:370 },
+    { name:'iPad 9th Gen (2021)', base:230 },
+    { name:'iPad Pro 11" M1 (2021)', base:530 },
+    { name:'iPad Pro 12.9" M1 (2021)', base:680 },
+    { name:'iPad Air 5th Gen M1 (2022)', base:430 },
+    { name:'iPad 10th Gen (2022)', base:310 },
+    { name:'iPad Pro 11" M2 (2022)', base:620 },
+    { name:'iPad Pro 12.9" M2 (2022)', base:790 },
+    { name:'iPad Air 11" M2 (2024)', base:550 },
+    { name:'iPad Air 13" M2 (2024)', base:680 },
+    { name:'iPad Pro 11" M4 (2024)', base:870 },
+    { name:'iPad Pro 13" M4 (2024)', base:1050 },
+    { name:'iPad Mini 7th Gen (2024)', base:430 },
+  ],
+  macbook: [
+    { name:'MacBook Air 13" Intel (2019)', base:420 },
+    { name:'MacBook Pro 13" Intel (2019)', base:480 },
+    { name:'MacBook Pro 16" Intel (2019)', base:680 },
+    { name:'MacBook Air M1 (2020)', base:620 },
+    { name:'MacBook Pro 13" M1 (2020)', base:720 },
+    { name:'MacBook Pro 14" M1 Pro (2021)', base:980 },
+    { name:'MacBook Pro 16" M1 Max (2021)', base:1280 },
+    { name:'MacBook Air 13" M2 (2022)', base:760 },
+    { name:'MacBook Pro 13" M2 (2022)', base:820 },
+    { name:'MacBook Pro 14" M2 Pro (2023)', base:1120 },
+    { name:'MacBook Pro 16" M2 Max (2023)', base:1450 },
+    { name:'MacBook Air 13" M3 (2024)', base:860 },
+    { name:'MacBook Air 15" M3 (2024)', base:960 },
+    { name:'MacBook Pro 14" M3 Pro (2024)', base:1300 },
+    { name:'MacBook Pro 16" M3 Max (2024)', base:1700 },
+    { name:'MacBook Air 13" M4 (2025)', base:920 },
+    { name:'MacBook Air 15" M4 (2025)', base:1060 },
+  ]
+};
+
+const CONDITION_MULT = { sealed:1.0, openbox:0.88, likenew:0.78, excellent:0.68, good:0.56, fair:0.38, parts:0.18 };
+const CONDITION_LABEL = { sealed:'New Sealed', openbox:'Open Box', likenew:'Like New', excellent:'Excellent', good:'Good', fair:'Fair', parts:'For Parts' };
+const STORAGE_MULT = { '64':0.92, '128':1.0, '256':1.10, '512':1.22, '1000':1.35 };
+
+function updatePricerModels() {
+  const type = document.getElementById('pr-type').value;
+  const sel = document.getElementById('pr-model');
+  sel.innerHTML = '';
+  PRICER_MODELS[type].forEach(m => {
+    const o = document.createElement('option');
+    o.value = m.base;
+    o.textContent = m.name;
+    sel.appendChild(o);
+  });
+  // update storage options based on device type
+  const storageSel = document.getElementById('pr-storage');
+  const macbookStorages = [
+    {v:'256',l:'256GB'},{v:'512',l:'512GB'},{v:'1000',l:'1TB'},{v:'2000',l:'2TB'}
+  ];
+  const phoneStorages = [
+    {v:'64',l:'64GB'},{v:'128',l:'128GB'},{v:'256',l:'256GB'},{v:'512',l:'512GB'},{v:'1000',l:'1TB'}
+  ];
+  const opts = (type === 'macbook') ? macbookStorages : phoneStorages;
+  storageSel.innerHTML = opts.map(o => `<option value="${o.v}">${o.l}</option>`).join('');
+  if (type !== 'macbook') storageSel.value = '128';
+  else storageSel.value = '256';
+}
+
+function calcPrice() {
+  const modelBase = parseFloat(document.getElementById('pr-model').value);
+  const storage = document.getElementById('pr-storage').value;
+  const condition = document.getElementById('pr-condition').value;
+  const carrier = document.getElementById('pr-carrier').value;
+  const hasBox = document.getElementById('pr-box').value === 'yes';
+  const margin = parseFloat(document.getElementById('pr-margin').value) / 100;
+  const modelName = document.getElementById('pr-model').options[document.getElementById('pr-model').selectedIndex].text;
+  const condLabel = CONDITION_LABEL[condition];
+  const storageMult = STORAGE_MULT[storage] || 1.0;
+  const condMult = CONDITION_MULT[condition];
+  const carrierPenalty = carrier === 'locked' ? 0.82 : 1.0;
+  const boxBonus = hasBox ? 1.04 : 1.0;
+
+  const marketValue = Math.round(modelBase * storageMult * condMult * carrierPenalty * boxBonus);
+  const maxBuyPrice = Math.round(marketValue * (1 - margin));
+  const goodBuyPrice = Math.round(maxBuyPrice * 0.88);
+  const targetSellPrice = Math.round(marketValue * 0.96);
+  const profitAtMax = marketValue - maxBuyPrice;
+  const profitAtGood = marketValue - goodBuyPrice;
+
+  const storageLabel = document.getElementById('pr-storage').options[document.getElementById('pr-storage').selectedIndex].text;
+
+  const placeholder = document.getElementById('pricer-placeholder');
+  const result = document.getElementById('pricer-result');
+  placeholder.style.display = 'none';
+  result.style.display = 'block';
+
+  const condColor = condition === 'sealed' || condition === 'openbox' ? 'var(--accent)' :
+    condition === 'likenew' || condition === 'excellent' ? 'var(--green)' :
+    condition === 'good' ? 'var(--yellow)' : 'var(--accent2)';
+
+  result.innerHTML = `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;">ANALYSIS FOR</div>
+      <div style="font-family:var(--font-display);font-size:20px;letter-spacing:1px;margin-bottom:4px;">${modelName}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:20px;">${storageLabel} · ${condLabel} · ${carrier === 'locked' ? 'Carrier Locked' : 'Unlocked'}${hasBox ? ' · With Box' : ''}</div>
+
+      <div style="background:rgba(0,217,126,.06);border:1px solid rgba(0,217,126,.2);border-radius:10px;padding:16px;margin-bottom:12px;text-align:center;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--green);margin-bottom:4px;">🎯 SWEET SPOT — OFFER THIS FIRST</div>
+        <div style="font-family:var(--font-display);font-size:44px;color:var(--green);">$${goodBuyPrice}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Est. profit: <strong style="color:var(--green);">$${profitAtGood}</strong> (${Math.round(profitAtGood/goodBuyPrice*100)}% ROI)</div>
+      </div>
+
+      <div style="background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.15);border-radius:10px;padding:14px;margin-bottom:16px;text-align:center;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--accent);margin-bottom:4px;">🔴 ABSOLUTE MAX — DON'T GO HIGHER</div>
+        <div style="font-family:var(--font-display);font-size:32px;color:var(--accent);">$${maxBuyPrice}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Min profit at this price: <strong style="color:var(--accent);">$${profitAtMax}</strong></div>
+      </div>
+
+      <div style="border-top:1px solid var(--border);padding-top:14px;display:flex;flex-direction:column;gap:9px;">
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);">EST. MARKET VALUE</span>
+          <span style="font-size:14px;font-weight:500;">$${marketValue}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);">SUGGESTED SELL PRICE</span>
+          <span style="font-size:14px;color:var(--yellow);">$${targetSellPrice}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);">CONDITION</span>
+          <span style="font-size:13px;color:${condColor};">${condLabel}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);">TARGET MARGIN</span>
+          <span style="font-size:13px;">${Math.round(margin*100)}%</span>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;padding:12px;background:var(--surface);border-radius:8px;font-size:12px;color:var(--muted);line-height:1.7;">
+        💡 <strong style="color:var(--text);">Negotiation tip:</strong> Start your offer at <strong style="color:var(--green);">$${Math.round(goodBuyPrice * 0.9)}</strong> — the seller will likely counter, and you'll land near your sweet spot.
+      </div>
+    </div>
+  `;
+}
+
+// Init pricer models on load
+
+// Set today's date as default
+document.getElementById('crm-date').valueAsDate = new Date();
+document.getElementById('pur-date').valueAsDate = new Date();
+
+// Init
+renderAll();
+updatePricerModels();
+// Auto-load sales from Google Sheets on startup
+gsLoadSales();
+// Init sell form
+initSellModels('iPhone');
+// Hero image fade-in
+document.querySelectorAll('.hb-stage img').forEach(img => {
+  img.style.opacity = '0';
+  img.style.transition = 'opacity 0.5s';
+  img.addEventListener('load', () => { img.style.opacity = '1'; });
+  if (img.complete && img.naturalWidth > 0) img.style.opacity = '1';
+});
+</script>
+</body>
+</html>
