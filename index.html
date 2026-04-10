@@ -359,10 +359,10 @@
     letter-spacing: 2px;
   }
   .stats-row {
-    display: flex;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
     margin-bottom: 28px;
-    flex-wrap: wrap;
   }
   .stat-card {
     background: var(--card);
@@ -581,15 +581,152 @@
   }
   .toast.show { transform: translateY(0); opacity: 1; }
 
+  /* ════════════════════════════════
+     MOBILE — full responsive overhaul
+  ════════════════════════════════ */
   @media(max-width: 768px) {
-    .crm-layout { grid-template-columns: 1fr; }
-    .crm-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
-    .inventory-grid { padding: 0 16px 40px; }
-    .filter-bar, .hero { padding-left: 16px; padding-right: 16px; }
-    .contact-strip { padding: 28px 16px; }
-    .crm-main { padding: 20px 12px; }
-    .app-nav { padding: 0 16px; }
+
+    /* NAV — hamburger-style scrollable tabs */
+    .app-nav {
+      padding: 0 12px;
+      height: auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .app-nav-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+    }
     .app-logo { font-size: 22px; }
+    .nav-tabs {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 4px;
+      padding: 6px 0 8px;
+      border-top: 1px solid var(--border);
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      padding: 7px 14px;
+      font-size: 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* STOREFRONT */
+    .filter-bar { padding: 0 12px 20px; gap: 6px; }
+    .filter-label { display: none; }
+    .filter-btn { font-size: 12px; padding: 5px 12px; }
+    .inventory-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      padding: 0 12px 40px;
+    }
+    .device-card { border-radius: 10px; }
+    .card-emoji { font-size: 38px; padding: 20px 0 10px; }
+    .card-name { font-size: 16px; }
+    .card-price { font-size: 20px; }
+    .contact-strip {
+      flex-direction: column;
+      padding: 28px 16px;
+      gap: 16px;
+    }
+    .contact-strip h2 { font-size: 26px; }
+    .contact-links { flex-direction: column; width: 100%; }
+    .contact-chip { justify-content: center; }
+
+    /* CRM */
+    .crm-layout { grid-template-columns: 1fr; }
+    .crm-sidebar { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 16px; }
+    .crm-main { padding: 16px 12px; overflow-x: hidden; }
+    .crm-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .crm-header div[style*="flex"] { width: 100%; justify-content: flex-start; }
+    .stats-row {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .stat-card { padding: 12px 14px; }
+    .stat-value { font-size: 26px; }
+
+    /* Tables — horizontal scroll */
+    .orders-table { font-size: 12px; }
+    .orders-table th, .orders-table td { padding: 8px 10px; }
+    div[style*="border-radius:12px"][style*="overflow:hidden"] { overflow-x: auto; }
+
+    /* Inventory manager */
+    .inv-manager { border-radius: 10px; }
+    .inv-row {
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+    .inv-row .delete-btn { grid-column: 2; grid-row: 1; }
+    .inv-toggle { font-size: 10px; padding: 3px 8px; }
+
+    /* IMEI / Pricer / Sell views */
+    div[id="view-imei"] > div,
+    div[id="view-pricer"] > div,
+    div[id="view-sell"] > div { padding: 24px 16px; }
+
+    /* Pricer — stack the two columns */
+    div[id="view-pricer"] .crm-layout,
+    div[id="view-pricer"] > div > div[style*="grid-template-columns:1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    #pricer-placeholder { display: none; }
+
+    /* IMEI info cards — stack */
+    div[id="view-imei"] div[style*="grid-template-columns:1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    #imei-result div[style*="display:flex;gap:10px"] {
+      flex-direction: column;
+    }
+
+    /* Sell form */
+    #sell-type-grid { grid-template-columns: 1fr 1fr !important; }
+    #sell-progress { overflow-x: auto; }
+    .sell-step-ind { font-size: 9px; padding: 8px 4px; }
+
+    /* Hero banner */
+    .hb-body { grid-template-columns: 1fr; }
+    .hb-left { padding: 28px 16px 24px; }
+    .hb-l1, .hb-l2 { font-size: 54px !important; }
+    .hb-l3 { font-size: 28px !important; }
+    .hb-sub { font-size: 12px; max-width: 100%; }
+    .hb-types { gap: 4px; }
+    .hb-type { font-size: 7px; padding: 3px 8px; }
+    .hb-ctas { gap: 8px; }
+    .hb-btn-c, .hb-btn-r, .hb-btn-o { padding: 10px 16px; font-size: 9px; }
+    .hb-right { min-height: 260px; }
+    .hb-stage { height: 220px; }
+    .hb-mac-l, .hb-mac-r { width: 95px; }
+    .hb-iph-bl, .hb-sam-br { width: 54px; }
+    .hb-iph-c { width: 72px; }
+    .hb-bdg-tl, .hb-bdg-bl { display: none; }
+    .hb-bdg-tr { top: 12px; right: 10px; }
+    .hb-bdg-br { bottom: 14px; right: 10px; }
+    .hb-bdg-val { font-size: 16px; }
+    .hb-strip { padding: 8px 12px; flex-wrap: wrap; gap: 4px; }
+    .hb-si { border-right: none; font-size: 8px; flex: 0 0 45%; padding: 2px 4px; }
+
+    /* Sell form cards inside use-of-funds section */
+    div[style*="grid-template-columns:1fr 1fr"][style*="gap:20px"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* Extra small phones */
+  @media(max-width: 400px) {
+    .hb-mac-l, .hb-mac-r { display: none; }
+    .hb-stage { height: 200px; }
+    .inventory-grid { grid-template-columns: 1fr 1fr; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .nav-tab { font-size: 11px; padding: 6px 10px; }
   }
 
   /* ════════════════════════════════
@@ -788,6 +925,7 @@
   .hb-si:first-child { padding-left: 0; }
   .hb-si:last-child { border-right: none; }
   .hb-sd { width:5px;height:5px;border-radius:50%;flex-shrink:0;display:inline-block; }
+  @media(max-width:768px) { .mob-scroll-hint { display:inline !important; } }
 
   /* Mobile adjustments */
   @media(max-width:768px) {
@@ -809,13 +947,16 @@
 
 <!-- NAV -->
 <nav class="app-nav">
-  <div class="app-logo">TECH<span>FLIP</span></div>
+  <div class="app-nav-top">
+    <div class="app-logo">TECH<span>FLIP</span></div>
+    <span style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);display:none;" class="mob-scroll-hint">← scroll tabs →</span>
+  </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchView('storefront', this)">🛍 Storefront</button>
     <button class="nav-tab" onclick="switchView('crm', this)">📊 My CRM</button>
-    <button class="nav-tab" onclick="switchView('imei', this)">🔍 IMEI Check</button>
-    <button class="nav-tab" onclick="switchView('pricer', this)">💰 Buy Pricer</button>
-    <button class="nav-tab" onclick="switchView('sell', this)">📥 Sell To Us</button>
+    <button class="nav-tab" onclick="switchView('imei', this)">🔍 IMEI</button>
+    <button class="nav-tab" onclick="switchView('pricer', this)">💰 Pricer</button>
+    <button class="nav-tab" onclick="switchView('sell', this)">📥 Sell</button>
   </div>
 </nav>
 
@@ -1147,7 +1288,7 @@
       </div>
 
       <!-- Sales Table -->
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;-webkit-overflow-scrolling:touch;">
         <table class="orders-table" id="orders-table">
           <thead>
             <tr>
@@ -1188,7 +1329,7 @@
             <button class="btn btn-outline" onclick="exportPurchasesCSV()" style="font-size:11px;padding:4px 12px;">📋 Export</button>
           </div>
         </div>
-        <div style="overflow-x:auto;">
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
           <table class="orders-table" id="purchases-table" style="display:none;">
             <thead>
               <tr>
